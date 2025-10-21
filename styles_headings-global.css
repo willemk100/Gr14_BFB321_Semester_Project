@@ -1,0 +1,7 @@
+/* headings-global.css - styles for headings kept in a separate document as requested */
+h1, h2, h3{
+font-family: 'Georgia', serif;
+color: #0b3b5a;
+}
+h1.site-title{letter-spacing:0.5px}
+h2.section-heading{border-left:4px solid var(--accent); padding-left:0.6rem}
