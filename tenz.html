@@ -1,4 +1,229 @@
+<!DOCTYPE html> 
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Food Ordering Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+     <header>
+        <nav class="navbar" style="background-color: crimson;"     role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <a class="navbar-brand" style="color: ghostwhite;" href="index.html">
+                    <img src="up-logo.png" alt="UPLogo" width="90" height="30" aria-hidden="true" class="d-inline-block align-text-top">  
+                    Food Ordering Platform
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: ghostwhite;" href="user-main.html" aria-current="page">
+                                <i class="bi bi-stack me-1" aria-hidden="true"></i>
+                                All Options
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="add-product.html">
+                                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>Add Product
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="view-inventory.html">
+                                <i class="bi bi-list-ul me-1" aria-hidden="true"></i>View Inventory
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="update-stock.html">
+                                <i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Update Stock
+                            </a>
+                        </li> -->
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: ghostwhite;" href="login.html">
+                                <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                                Log Out
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="register.html">
+                                <i class="bi bi-person-plus me-1" aria-hidden="true"></i>Register
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mt-4" role="main">
+        <!-- <header class="mb-4">
+            <h1 class="h2">
+                <i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>Dashboard
+            </h1>
+        </header>
+        <section class="mb-4">
+            <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">12</h4>
+                                <p class="card-text">Total Products</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-box-seam fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">248</h4>
+                                <p class="card-text">Total Items</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-stack fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">3</h4>
+                                <p class="card-text">Low Stock</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-exclamation-triangle fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">$4,520</h4>
+                                <p class="card-text">Total Value</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-currency-dollar fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section> -->
+
+        <!-- <section class="mb-4" aria-labelledby="actions-heading">
+            <h2 id="actions-heading" class="h3 mb-3">Quick Actions</h2>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-plus-circle text-primary fs-1 mb-3" aria-hidden="true"></i>
+                            <h3 class="card-title h5">Add New Product</h3>
+                            <p class="card-text">Add a new item to your inventory with name, quantity, and price.</p>
+                            <a href="add-product.html" class="btn btn-primary">Add Product</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-list-ul text-success fs-1 mb-3" aria-hidden="true"></i>
+                            <h3 class="card-title h5">View Inventory</h3>
+                            <p class="card-text">Browse and search through all your inventory items.</p>
+                            <a href="view-inventory.html" class="btn btn-success">View Inventory</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-pencil-square text-warning fs-1 mb-3" aria-hidden="true"></i>
+                            <h3 class="card-title h5">Update Stock</h3>
+                            <p class="card-text">Modify quantities for existing products in your inventory.</p>
+                            <a href="update-stock.html" class="btn btn-warning">Update Stock</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+    </main>
+
+    <footer class="mt-5 py-4">
+        <div class="container">
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-muted small">&copy; 2025 Food Ordering Platform. All rights reserved.</p>
+                        Read our
+                        <a href="#" class="text-decoration-none">Privacy Policy</a> 
+                        and 
+                        <a href="#" class="text-decoration-none">Terms of Service</a>
+                        here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <html lang="en">
 </div>
 </header>
 
@@ -55,4 +280,4 @@
 </footer>
 <script src="scripts/app.js"></script>
 </body>
-</html>
+</html> -->

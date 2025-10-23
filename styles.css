@@ -9,6 +9,24 @@ main {
       padding: 20px;
     }
 
+.card {     
+  height: 300px;                 
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+row {
+  height: 300px;
+  overflow: hidden; 
+}
+
+.custom-row {
+  border: 4px solid #08304a;  
+  border-radius: 8px;
+}
+
 footer {
       padding: 15px;
     }

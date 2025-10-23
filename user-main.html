@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Ordering Platform</title>
+    <title>Customer - Food Ordering Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -27,16 +27,6 @@
                                 Start Page
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" href="view-inventory.html">
-                                <i class="bi bi-list-ul me-1" aria-hidden="true"></i>View Inventory
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="update-stock.html">
-                                <i class="bi bi-pencil-square me-1" aria-hidden="true"></i>Update Stock
-                            </a>
-                        </li> -->
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item">
@@ -57,111 +47,88 @@
     </header>
 
     <main class="container mt-4" role="main">
-        <!-- <header class="mb-4">
+        <header class="mb-4">
             <h1 class="h2">
-                <i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>Dashboard
+                <i class="bi me-2" aria-hidden="true"></i>
+                All options
             </h1>
         </header>
-        <section class="mb-4">
-            <div class="row mb-4">
-            <div class="col-md-3 mb-3">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h4 class="card-title">12</h4>
-                                <p class="card-text">Total Products</p>
-                            </div>
-                            <div class="align-self-center">
-                                <i class="bi bi-box-seam fs-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card bg-success text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h4 class="card-title">248</h4>
-                                <p class="card-text">Total Items</p>
-                            </div>
-                            <div class="align-self-center">
-                                <i class="bi bi-stack fs-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card bg-warning text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h4 class="card-title">3</h4>
-                                <p class="card-text">Low Stock</p>
-                            </div>
-                            <div class="align-self-center">
-                                <i class="bi bi-exclamation-triangle fs-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card bg-info text-white">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h4 class="card-title">$4,520</h4>
-                                <p class="card-text">Total Value</p>
-                            </div>
-                            <div class="align-self-center">
-                                <i class="bi bi-currency-dollar fs-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </section> -->
 
-        <!-- <section class="mb-4" aria-labelledby="actions-heading">
-            <h2 id="actions-heading" class="h3 mb-3">Quick Actions</h2>
+        <section class="mb-4" aria-labelledby="options-heading">
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-plus-circle text-primary fs-1 mb-3" aria-hidden="true"></i>
-                            <h3 class="card-title h5">Add New Product</h3>
-                            <p class="card-text">Add a new item to your inventory with name, quantity, and price.</p>
-                            <a href="add-product.html" class="btn btn-primary">Add Product</a>
+                <div class="col-md-12 mb-3">
+                    <div class="card h-100" style="width: 100%; display: flex; flex-direction: row;">
+                        <img src="..." class="card-img-left" style="height: 300px; width: 40%; object-fit: cover;" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Tenz Express UP</h5>
+                            <p class="card-text">Tel | +27 (0)72 850 1986 </p>
+                            <p class="card-text">Location | Next to Akanyang</p>
+                            <p class="card-text">Hatfield Campus</p>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-list-ul text-success fs-1 mb-3" aria-hidden="true"></i>
-                            <h3 class="card-title h5">View Inventory</h3>
-                            <p class="card-text">Browse and search through all your inventory items.</p>
-                            <a href="view-inventory.html" class="btn btn-success">View Inventory</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <i class="bi bi-pencil-square text-warning fs-1 mb-3" aria-hidden="true"></i>
-                            <h3 class="card-title h5">Update Stock</h3>
-                            <p class="card-text">Modify quantities for existing products in your inventory.</p>
-                            <a href="update-stock.html" class="btn btn-warning">Update Stock</a>
-                        </div>
+                        <a href="tenz.html" class="btn btn-primary btn-lg" style="height: 120px; line-height: 100px;">
+                            <i class="bi bi-list-ul" aria-hidden="true" style="text-align: center;"></i>
+                            View Menu
+                        </a>
                     </div>
                 </div>
             </div>
-        </section> -->
+            <p class="spaced-paragraph"></p>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="card h-100" style="width: 100%; display: flex; flex-direction: row;">
+                        <img src="..." class="card-img-left" style="height: 300px; width: 40%; object-fit: cover;" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">(Title here)</h5>
+                            <p class="card-text">Tel | (Insert telefone here)</p>
+                            <p class="card-text">Location | (Insert location here)</p>
+                            <p class="card-text">(Insert campus here)</p>
+                        </div>
+                        <a class="btn btn-primary btn-lg" style="height: 120px; line-height: 100px;">
+                            <i class="bi bi-list-ul" aria-hidden="true" style="text-align: center;"></i>
+                            View Menu
+                        </a>
+                     </div>
+                     
+                </div>
+            </div>
+            <p class="spaced-paragraph"></p>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="card h-100" style="width: 100%; display: flex; flex-direction: row;">
+                        <img src="..." class="card-img-left" style="height: 300px; width: 40%; object-fit: cover;" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">(Title here)</h5>
+                            <p class="card-text">Tel | (Insert telefone here)</p>
+                            <p class="card-text">Location | (Insert location here)</p>
+                            <p class="card-text">(Insert campus here)</p>
+                        </div>
+                        <a class="btn btn-primary btn-lg" style="height: 120px; line-height: 100px;">
+                            <i class="bi bi-list-ul" aria-hidden="true" style="text-align: center;"></i>
+                            View Menu
+                        </a>
+                     </div>
+                     
+                </div>
+            </div>
+
+        </section>
+
+         <section class="mb-4" aria-labelledby="order-status-heading">
+            <h2 id="actions-heading" class="h3 mb-3">Active Orders</h2>
+            <div class="row custom-row">
+                <div class="col-md-12 mb-3">
+                    <div class="card h-40" style="width: 100%; display: flex; flex-direction: row;">
+                        <div class="card-body">
+                            <h5 class="card-title">Order #001</h5>
+                            <p class="card-text">Status: (Insert order status here)</p>
+                            <p class="card-text">Estimated time: (Insert time here)</p>
+                        </div>
+                    </div>
+                     
+                </div>  
+            </div>
+        </section>
+
     </main>
 
     <footer class="mt-5 py-4">
