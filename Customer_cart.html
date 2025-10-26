@@ -14,9 +14,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
-<!-- Header color -->
+    <!-- Header color -->
 <body>
-     <header>
+    <header>
         <nav class="navbar" style="background-color: crimson;"     role="navigation" aria-label="Main navigation">
             <div class="container">
                 <a class="navbar-brand" style="color: ghostwhite;" href="index.html">
@@ -29,9 +29,9 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" style="color: ghostwhite;" href="index.html" aria-current="page">
+                            <a class="nav-link active" style="color: ghostwhite;" href="customer-main.html" aria-current="page">
                                 <i class="bi bi-house me-1" aria-hidden="true"></i>
-                                Start Page
+                                Home
                             </a>
                         </li>
                     </ul>
@@ -53,7 +53,7 @@
         </nav>
     </header>
 
-<!-- Setting the header of the Page  -->
+    <!-- Setting the header of the Page  -->
     <main class="container mt-4" role="main">
         <header class="mb-4">
             <h1 class="h2">
@@ -62,64 +62,65 @@
             </h1>
         </header>
 
- <!-- Order Table -->
-      <table class="table text-center align-middle" id="orderTable">
-        <!-- Heading of the table -->
-        <thead class="table-light">
-          <tr>
-            <th>Item</th>
-            <th>Price</th>
-            <th></th>
-          </tr>
-        </thead>
+<!-- Order Table -->
+        <table class="table text-center align-middle" id="orderTable">
+            <!-- Heading of the table -->
+            <thead class="table-light">
+            <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+            </thead>
 
-        <!-- Body of the table -->
-        <tbody>
-          <tr>
-            <!-- Figure out a way to link previously selected orders (wiil need DB) -->
-            <td>Burger Meal</td>
-            <td>R120.00</td>
-            <!-- Code for remove option in every row -->
-            <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
-          </tr>
-    
-          <tr>
-            <td>Large Chips</td>
-            <td>R50.00</td>
-            <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
-          </tr>
-
-          <tr>
-            <td>Milkshake</td>
-            <td>R70.00</td>
-            <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
-          </tr>
-        </tbody>
-
-        <!-- Total Ammounts -->
-        <tfoot>
-          <tr class="fw-bold">
-            <td>Total</td>
-            <td id="total">R240.00</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-<!-- End of table -->
-
-
-
-      <!-- Action Buttons -->
-      <div class="text-center mt-4">
+            <!-- Body of the table -->
+            <tbody>
+            <tr>
+                <!-- Figure out a way to link previously selected orders (wiil need DB) -->
+                <td>Burger Meal</td>
+                <td>R120.00</td>
+                <!-- Code for remove option in every row -->
+                <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
+            </tr>
         
-        <button class="btn btn-secondary mb-2">Add to Order</button><br>
-        <button class="btn btn-primary">Order and Pay</button>
-      </div>
-    </div>
-  </div>
+            <tr>
+                <td>Large Chips</td>
+                <td>R50.00</td>
+                <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
+            </tr>
 
-</body>
-</html>
+            <tr>
+                <td>Milkshake</td>
+                <td>R70.00</td>
+                <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
+            </tr>
+            </tbody>
+
+            <!-- Total Ammounts -->
+            <tfoot>
+            <tr class="fw-bold">
+                <td>Total</td>
+                <td id="total">R240.00</td>
+                <td></td>
+            </tr>
+            </tfoot>
+        </table>
+        <!-- End of table -->
+
+    <!-- Action Buttons -->
+        <div class="row justify-content-center">
+            <a href="menu.html" class="btn btn-secondary mb-2" style="width: 170px; height: 60px; line-height: 40px;">
+                <i class="bi bi-arrow-right-circle" aria-hidden="true" style="text-align: center;"></i>
+                Add to Order
+            </a>
+        </div>
+        <p class="spaced-paragraph"></p>
+        <div class="row justify-content-center">
+            <a href="confirm-pay.html" class="btn btn-primary" style="width: 170px; height: 60px; line-height: 40px;">
+                <i class="bi bi-credit-card-2-front" aria-hidden="true" style="text-align: center;"></i>
+                Order and Pay
+            </a>
+        </div>
 
     </main>
 
