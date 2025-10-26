@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABC Classification - Food Ordering Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Custom styles to match the Figma board aesthetics */
+        body {
+            background-color: #f8f9fa; /* Light background */
+        }
+        .container-fluid.figma-bg {
+            background-color: #e0e0e0; /* Figma board background color */
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .figma-frame {
+            background-color: #ffffff; /* Inner frame background */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .nav-bar-placeholder {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .abc-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .time-filter .btn {
+            border-radius: 0;
+            margin-right: -1px; /* To make them look connected */
+        }
+        .time-filter .btn:first-child {
+            border-top-left-radius: .25rem;
+            border-bottom-left-radius: .25rem;
+        }
+        .time-filter .btn:last-child {
+            border-top-right-radius: .25rem;
+            border-bottom-right-radius: .25rem;
+        }
+        .metric-filter .btn {
+            border-radius: .25rem;
+            margin-right: 10px;
+        }
+        .chart-placeholder {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        .table thead th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid figma-bg">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 figma-frame">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h4 mb-0" style="color: crimson;">Food Ordering Platform</h1>
+                    <span class="badge bg-secondary">Nav Bar</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="abc-title mb-0">ABC Classification</h2>
+                    <a href="#" class="btn btn-secondary">Back</a>
+                </div>
+
+                <div class="d-flex justify-content-start mb-4 time-filter">
+                    <button type="button" class="btn btn-outline-secondary active">Daily</button>
+                    <button type="button" class="btn btn-outline-secondary">Weekly</button>
+                    <button type="button" class="btn btn-outline-secondary">Monthly</button>
+                    <button type="button" class="btn btn-outline-secondary">Yearly</button>
+                </div>
+
+                <div class="d-flex justify-content-start mb-4 metric-filter">
+                    <button type="button" class="btn btn-primary active">#Orders</button>
+                    <button type="button" class="btn btn-outline-primary">Profit</button>
+                    <button type="button" class="btn btn-outline-primary">Cost</button>
+                </div>
+
+                <div class="chart-placeholder mb-4">
+                    Pareto chart
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Class</th>
+                                <th scope="col">Item</th>
+                                <th scope="col">Units Sold</th>
+                                <th scope="col">Total Profit</th>
+                                <th scope="col">Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td>Burger</td>
+                                <td>12</td>
+                                <td>R400</td>
+                                <td>R180</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
+
