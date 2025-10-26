@@ -67,17 +67,106 @@
         <header class="mb-4">
             <h1 class="h2">
                 <i class="bi me-2" aria-hidden="true"></i>
-                Menu
+                Menu Manager
             </h1>
         </header>
 
+        <!-- Search bar -->
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Search for menu items" aria-label="Search bar">
+            </div>
+        </div>
 
-        <!--Actual body of page -->
+        <!-- First Heading Will need to find a way to connect this and add new headings from database -->
+        <h3 class="h4 mt-4 mb-3 border-bottom pb-2">Burgers </h3>
 
+        <!-- Burgers Table  -->
+        <div class="table-responsive shadow-sm mb-5">
+            <table class="table table-striped table-hover align-middle">
+                <!-- Table headings this will stay constant -->
+                <thead class="table-dark" style="background-color: crimson !important;">
+                    <tr>
+                        <th1 scope="col">Name</th1>
+                        <th2 scope="col">Description</th2>
+                        <th scope="col" class="text-end">Selling Price</th>
+                        <th scope="col" class="text-end">Estimated Cost</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
 
+                <!-- This will need to be auto generated from user inputs that are saved to a database -->
+                <tbody>
+                    <tr>
+                        <td>Cheese Burger</td>
+                        <td>Beef patty with lettuce, tomato, and cheese.</td>
+                        <td class="text-end">R55.00</td>
+                        <td class="text-end">R25.00</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#editModal-1">
+                                <i class="bi bi-pencil" aria-hidden="true"></i> Edit Item
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal-1">
+                                <i class="bi bi-trash" aria-hidden="true"></i> Remove Item
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Veggie Deluxe</td>
+                        <td>Black bean patty, avocado, red onion, and mayo on a whole-wheat bun.</td>
+                        <td class="text-end">R48.00</td>
+                        <td class="text-end">R22.00</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#editModal-2">
+                                <i class="bi bi-pencil" aria-hidden="true"></i> Edit Item
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal-2">
+                                <i class="bi bi-trash" aria-hidden="true"></i> Remove Item
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
+        <h3 class="h4 mt-4 mb-3 border-bottom pb-2">Drinks 🥤</h3>
 
+        <div class="table-responsive shadow-sm mb-5">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark" style="background-color: crimson !important;">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col" class="text-end">Selling Price</th>
+                        <th scope="col" class="text-end">Estimated Cost</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Soda Can</td>
+                        <td>330ml can of assorted carbonated soft drinks.</td>
+                        <td class="text-end">R15.00</td>
+                        <td class="text-end">R8.00</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#editModal-3">
+                                <i class="bi bi-pencil" aria-hidden="true"></i> Edit Item
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal-3">
+                                <i class="bi bi-trash" aria-hidden="true"></i> Remove Item
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
+        <div class="text-center mt-5">
+            <button class="btn btn-lg text-white" style="background-color: crimson;" data-bs-toggle="modal" data-bs-target="#addItemModal" aria-label="Add new menu item">
+                <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+                Add new Item
+            </button>
+        </div>
     </main>
 
     <footer class="mt-5 py-4">
