@@ -68,18 +68,139 @@
         <header class="mb-4">
             <h1 class="h2">
                 <i class="bi me-2" aria-hidden="true"></i>
-                Performance Analytics
+                Vendor Performance & Analytics
             </h1>
         </header>
 
-
-        <!--Actual body of page -->
-
-
-
-
+        <h2 class="h3 mb-3">Vendor Performance</h2>
         
-    </main>
+        <div class="btn-group mb-4" role="group" aria-label="Time period selection">
+            <input type="radio" class="btn-check" name="time-filter" id="daily" autocomplete="off" checked>
+            <label class="btn btn-outline-secondary" for="daily" style="--bs-btn-color: #dc3545; --bs-btn-border-color: #dc3545; --bs-btn-hover-bg: #dc3545; --bs-btn-hover-border-color: #dc3545; --bs-btn-checked-bg: crimson; --bs-btn-checked-border-color: crimson;">Daily</label>
+
+            <input type="radio" class="btn-check" name="time-filter" id="weekly" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="weekly" style="--bs-btn-color: #dc3545; --bs-btn-border-color: #dc3545; --bs-btn-hover-bg: #dc3545; --bs-btn-hover-border-color: #dc3545; --bs-btn-checked-bg: crimson; --bs-btn-checked-border-color: crimson;">Weekly</label>
+
+            <input type="radio" class="btn-check" name="time-filter" id="monthly" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="monthly" style="--bs-btn-color: #dc3545; --bs-btn-border-color: #dc3545; --bs-btn-hover-bg: #dc3545; --bs-btn-hover-border-color: #dc3545; --bs-btn-checked-bg: crimson; --bs-btn-checked-border-color: crimson;">Monthly</label>
+
+            <input type="radio" class="btn-check" name="time-filter" id="yearly" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="yearly" style="--bs-btn-color: #dc3545; --bs-btn-border-color: #dc3545; --bs-btn-hover-bg: #dc3545; --bs-btn-hover-border-color: #dc3545; --bs-btn-checked-bg: crimson; --bs-btn-checked-border-color: crimson;">Yearly</label>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            
+            <div class="col">
+                <div class="card text-center h-100 shadow-sm">
+                    <div class="card-header text-muted small">Completed Orders</div>
+                    <div class="card-body">
+                        <h4 class="card-title display-6 fw-bold">85</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100 shadow-sm">
+                    <div class="card-header text-muted small">Revenue</div>
+                    <div class="card-body">
+                        <h4 class="card-title display-6 fw-bold text-success">R2000.00</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center h-100 shadow-sm">
+                    <div class="card-header text-muted small">Most Popular Item</div>
+                    <div class="card-body">
+                        <h4 class="card-title display-6 fw-bold">Cheese Burger</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="h3 mb-3 border-bottom pb-2">Analytics</h2>
+        
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5 text-center">
+            
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card bg-secondary text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <i class="bi bi-sort-alpha-down-alt display-6 mb-2" aria-hidden="true"></i>
+                            <h5 class="card-title">ABC Classification</h5>
+                            <p class="card-text small opacity-75">Categorize inventory by value/volume.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card bg-secondary text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <i class="bi bi-graph-up display-6 mb-2" aria-hidden="true"></i>
+                            <h5 class="card-title">Product Trends</h5>
+                            <p class="card-text small opacity-75">View sales patterns and seasonal peaks.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="col">
+                <a href="#" class="text-decoration-none">
+                    <div class="card bg-secondary text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <i class="bi bi-calendar-check display-6 mb-2" aria-hidden="true"></i>
+                            <h5 class="card-title">Forecasting</h5>
+                            <p class="card-text small opacity-75">Predict future demand for inventory.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <h2 class="h3 mb-3 border-bottom pb-2">Sales History</h2>
+        
+        <div class="table-responsive shadow-sm">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark" style="background-color: crimson !important;">
+                    <tr>
+                        <th scope="col">Order Number</th>
+                        <th scope="col">Items</th>
+                        <th scope="col" class="text-end">Price</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">#1</th>
+                        <td>Burger</td>
+                        <td class="text-end">R45.00</td>
+                        <td>11/05/25</td>
+                        <td>16:00</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">#2</th>
+                        <td>Soda Can, Fries</td>
+                        <td class="text-end">R23.00</td>
+                        <td>11/05/25</td>
+                        <td>15:45</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">#3</th>
+                        <td>Veggie Deluxe, Water</td>
+                        <td class="text-end">R60.00</td>
+                        <td>10/05/25</td>
+                        <td>19:10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </main>
+
+    <!-- Footer Section -->
 
     <footer class="mt-5 py-4">
         <div class="container">
