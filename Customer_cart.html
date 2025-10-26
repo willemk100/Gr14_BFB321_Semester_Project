@@ -1,0 +1,145 @@
+<!-- document type -->
+<!DOCTYPE html> 
+<html lang="en">
+<!-- sets initial header-->
+<head>
+    <!-- makes sure display is correct -->
+    <meta charset="UTF-8">
+    <!-- scale properly for laptop and phone -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer - Food Ordering Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Links Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<!-- Header color -->
+<body>
+     <header>
+        <nav class="navbar" style="background-color: crimson;"     role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <a class="navbar-brand" style="color: ghostwhite;" href="index.html">
+                    <img src="images/up-logo.png" alt="UPLogo" width="90" height="30" aria-hidden="true" class="d-inline-block align-text-top">  
+                    Food Ordering Platform
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: ghostwhite;" href="index.html" aria-current="page">
+                                <i class="bi bi-house me-1" aria-hidden="true"></i>
+                                Start Page
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: ghostwhite;" href="login.html">
+                                <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                                Log Out
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="register.html">
+                                <i class="bi bi-person-plus me-1" aria-hidden="true"></i>Register
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+<!-- Setting the header of the Page  -->
+    <main class="container mt-4" role="main">
+        <header class="mb-4">
+            <h1 class="h2">
+                <i class="bi me-2" aria-hidden="true"></i>
+                Current Order
+            </h1>
+        </header>
+
+ <!-- Order Table -->
+      <table class="table text-center align-middle" id="orderTable">
+        <!-- Heading of the table -->
+        <thead class="table-light">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <!-- Body of the table -->
+        <tbody>
+          <tr>
+            <!-- Figure out a way to link previously selected orders (wiil need DB) -->
+            <td>Burger Meal</td>
+            <td>R120.00</td>
+            <!-- Code for remove option in every row -->
+            <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
+          </tr>
+    
+          <tr>
+            <td>Large Chips</td>
+            <td>R50.00</td>
+            <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
+          </tr>
+
+          <tr>
+            <td>Milkshake</td>
+            <td>R70.00</td>
+            <td><button class="btn btn-danger btn-sm remove-btn">X</button></td>
+          </tr>
+        </tbody>
+
+        <!-- Total Ammounts -->
+        <tfoot>
+          <tr class="fw-bold">
+            <td>Total</td>
+            <td id="total">R240.00</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+<!-- End of table -->
+
+
+
+      <!-- Action Buttons -->
+      <div class="text-center mt-4">
+        
+        <button class="btn btn-secondary mb-2">Add to Order</button><br>
+        <button class="btn btn-primary">Order and Pay</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+    </main>
+
+    <footer class="mt-5 py-4">
+        <div class="container">
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-muted small">&copy; 2025 Food Ordering Platform. All rights reserved.</p>
+                        Read our
+                        <a href="#" class="text-decoration-none">Privacy Policy</a> 
+                        and 
+                        <a href="#" class="text-decoration-none">Terms of Service</a>
+                        here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
