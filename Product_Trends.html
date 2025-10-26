@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABC Classification - Food Ordering Platform</title>
+    <title>Product Trends - Food Ordering Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-
-
         /* Custom styles to match the Figma board aesthetics */
         body {
             background-color: #e0e0e0; /* Light background */
         }
-
         .container-fluid.figma-bg {
             background-color: #e0e0e0; /* Figma board background color */
             padding: 20px;
@@ -70,6 +67,10 @@
         .table thead th {
             background-color: #f0f0f0;
         }
+        /* Specific styles for Product Trends */
+        .item-selector .btn {
+            border-radius: .25rem;
+        }
     </style>
 </head>
 
@@ -120,7 +121,6 @@
         </nav>
     </header>
 
-
 <body>
     <div class="container-fluid figma-bg">
         <div class="row justify-content-center">
@@ -128,17 +128,16 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     
-                   
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="abc-title mb-0">ABC Classification</h2>
-            
+                    <h2 class="abc-title mb-0">Product Trends</h2>
+                    
                 </div>
 
                 <div class="d-flex justify-content-start mb-4 time-filter">
-                    <button type="button" class="btn btn-outline-secondary active">Daily</button>
-                    <button type="button" class="btn btn-outline-secondary">Weekly</button>
+                    <button type="button" class="btn btn-outline-secondary">Daily</button>
+                    <button type="button" class="btn btn-outline-secondary active">Weekly</button>
                     <button type="button" class="btn btn-outline-secondary">Monthly</button>
                     <button type="button" class="btn btn-outline-secondary">Yearly</button>
                 </div>
@@ -149,15 +148,21 @@
                     <button type="button" class="btn btn-outline-primary">Cost</button>
                 </div>
 
+                <div class="d-flex align-items-center mb-4 item-selector">
+                    <span class="me-2">Select Item:</span>
+                    <button type="button" class="btn btn-outline-dark me-4">Burgers</button>
+                    <span class="me-2">Compare to:</span>
+                    <button type="button" class="btn btn-outline-dark">Wraps</button>
+                </div>
+
                 <div class="chart-placeholder mb-4">
-                    Pareto chart
+                    Line graph
                 </div>
 
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col">Class</th>
                                 <th scope="col">Item</th>
                                 <th scope="col">Units Sold</th>
                                 <th scope="col">Total Profit</th>
@@ -166,14 +171,12 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>A</td>
                                 <td>Burger</td>
                                 <td>12</td>
                                 <td>R400</td>
                                 <td>R180</td>
                             </tr>
                             <tr>
-                                <td>B</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -187,7 +190,7 @@
         </div>
     </div>
 
-    <footer class="mt-5 py-4">
+<footer class="mt-5 py-4">
         <div class="container">
             <hr class="my-3">
             <div class="row">
