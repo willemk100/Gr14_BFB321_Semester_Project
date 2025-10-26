@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Menu Item - Food Ordering Platform</title>
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="css/bootstrap-icons.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                <a class="navbar-brand" style="color: ghostwhite;" href="index.html">
+                    <img src="images/up-logo.png" alt="UPLogo" width="100" height="30" aria-hidden="true" class="d-inline-block align-text-top">
+                    Food Ordering Platform
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: ghostwhite;" href="login.html">
+                                <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                                Log Out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container py-5" role="main">
+        <div class="border shadow-lg p-4 p-md-5 mx-auto position-relative" style="max-width: 600px; background-color: #f8f9fa;">
+            
+            <a href="Vendor_Menu.html" class="text-decoration-none fw-semibold position-absolute top-0 end-0 mt-3 me-3 text-dark btn btn-outline-secondary">Back</a>
+
+            <h1 class="h3 text-center mb-4">New Menu Item</h1>
+            <p class="text-center fw-bold mb-4">Insert Item Details</p>
+
+            <form action="#" method="POST">
+
+                <div class="row mb-3 align-items-center">
+                    <label for="itemType" class="col-sm-4 col-form-label text-end-custom">Catagory</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="itemType" placeholder="" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="itemName" class="col-sm-4 col-form-label text-end-custom">Item Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="itemName" placeholder="" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="description" class="col-sm-4 col-form-label text-end-custom">Description</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="description" placeholder="" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="sellingPrice" class="col-sm-4 col-form-label text-end-custom">Selling Price</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" id="sellingPrice" placeholder="R 00.00" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="estimatedCost" class="col-sm-4 col-form-label text-end-custom">Estimated Cost</label>
+                    <div class="col-sm-8">
+                        <input type="number" class="form-control" id="estimatedCost" placeholder="R 00.00" required aria-required="true">
+                    </div>
+                </div>
+                
+                <div class="row mb-3 align-items-center">
+                    <label for="password" class="col-sm-4 col-form-label text-end-custom">Password</label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control bg-white text-muted text-center" id="password" placeholder="Chosen Password" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <label for="confirmPassword" class="col-sm-4 col-form-label text-end-custom">Confirm Password</label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control bg-white text-muted text-center" id="confirmPassword" placeholder="Confirm Chosen Password" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-5">
+                    <button type="submit" class="btn btn-lg crimson-bg">Sign Up</button>
+                    </div>
+
+            </form>
+        </div>
+    </main>
+
+    <footer class="mt-5 py-4">
+        <div class="container">
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-muted small">
+                        &copy; 2025 Food Ordering Platform. All rights reserved.
+                        Read our
+                        <a href="#" class="text-decoration-none">Privacy Policy</a>
+                        and
+                        <a href="#" class="text-decoration-none">Terms of Service</a>
+                        here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
