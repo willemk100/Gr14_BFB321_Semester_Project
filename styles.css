@@ -77,19 +77,27 @@ input[type=number] {
 .time-filter .btn {
             border-radius: 0;
             margin-right: -1px; 
-        }
+}
+
+
 .time-filter .btn:first-child {
     border-top-left-radius: .25rem;
     border-bottom-left-radius: .25rem;
 }
+
+
 .time-filter .btn:last-child {
     border-top-right-radius: .25rem;
     border-bottom-right-radius: .25rem;
 }
+
+
 .metric-filter .btn {
     border-radius: .25rem;
     margin-right: 10px;
 }
+
+
 .chart-placeholder {
     background-color: #f8f8f8;
     border: 1px solid #ddd;
@@ -100,9 +108,26 @@ input[type=number] {
     color: #999;
     margin-bottom: 20px;
 }
+
+
 .table thead th {
     background-color: #f0f0f0;
 }
+
+
 .item-selector .btn {
             border-radius: .25rem;
+}
+
+
+.prediction-box {
+            height: 50px;
+            width: 100px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
 }
