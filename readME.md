@@ -1,9 +1,10 @@
 # BFB 321 Semester Project - Group 14
 
 ## Group Members
-Ayden de Villiers
-Wian du Toit
-Willem Kleynhans
+Ayden de Villiers – u04867999 
+Ricus Bouwer – u23525135 
+Wian du Toit – u23592410 
+Willem Kleynhans – u04868260
 
 
 ## Food ordering system for restautants on the University Campus
