@@ -67,7 +67,7 @@
                                     </div>
                                 </div>
 
-                             <!--  -->
+                             <!--Order Total from previous-->
                             <div class="row mb-3">
                                 <label for="displayTOTAL" class="col-sm-3 col-form-label">
                                     Order TOTAL:
@@ -126,15 +126,27 @@
                                     </div>
                                 </div>
 
-                                <!--Card Expiration Date -->
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="floatingInputGrid2" placeholder="MM/YY">
-                                        <label for="floatingInputGrid2">MM/YY</label>
+                    <!--Card Expiration Date -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input 
+                                type="month" 
+                                class="form-control" 
+                                id="cardExpiry" 
+                                name="card_expiry"
+                                placeholder="MM/YY"
+                                required
+                                aria-label="Card Expiration Date Month and Year"
+                                            
+                                min="2025-10" 
+                                >
+                                        <label for="cardExpiry">Expiration Date (MM/YY)</label>
                                     </div>
                                 </div>
                             </fieldset>
 
+
+                            <!-- Confirm and pay Button -->
                             <fieldset class="row mb-3">
                                 <div class="col-md">
                                    <div class="d-grid">
