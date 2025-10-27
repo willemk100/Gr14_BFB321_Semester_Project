@@ -131,3 +131,14 @@ input[type=number] {
             font-weight: bold;
             font-size: 1.2em;
 }
+
+
+.page-header-box {
+            border: 1px solid #ccc;
+            fill: crimson;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
