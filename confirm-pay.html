@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
             <div class="container">
-                <a class="navbar-brand" style="color: ghostwhite;" href="index (1).html">
+                <a class="navbar-brand" style="color: ghostwhite;">
                     <img src="images/up-logo.png" alt="UPLogo" width="90" height="30" aria-hidden="true" class="d-inline-block align-text-top">  
                     Food Ordering Platform
                 </a>
@@ -54,18 +54,20 @@
                                     
                                     <div class="col-md-4 col-4">
                                         <input 
-                                            type="time" 
-                                            class="form-control" 
-                                            id="inputPickup" 
-                                            name="pickup_time" 
-                                            required
-                                            min="08:00" 
-                                            max="16:00" 
-                                            step="600">
+                                                type="time" 
+                                                class="form-control" 
+                                                id="inputPickup" 
+                                                name="pickup_time" 
+                                                required
+                                                min="08:00" 
+                                                max="16:00" 
+                                                step="600"
+                                                onkeydown="return false;">
                                             
                                     </div>
                                 </div>
 
+                             <!--  -->
                             <div class="row mb-3">
                                 <label for="displayTOTAL" class="col-sm-3 col-form-label">
                                     Order TOTAL:
@@ -123,6 +125,8 @@
                                         <label for="floatingInputGrid1">CVV</label>
                                     </div>
                                 </div>
+
+                                <!--Card Expiration Date -->
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="floatingInputGrid2" placeholder="MM/YY">
