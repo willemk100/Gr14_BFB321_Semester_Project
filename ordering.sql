@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "user" (
   "user_type" TEXT NOT NULL CHECK("user_type" IN ('admin', 'user'))
 );
 
--- Index on username
+-- Index on username (AK)
 CREATE UNIQUE INDEX IF NOT EXISTS "idx_user_username" ON "user" ("username");
 
 -----------------------------------------------------
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS "vendor" (
   "updated_at" TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- Index on name
+-- Index on name (FK)
 CREATE INDEX IF NOT EXISTS "idx_vendor_name" ON "vendor" ("name");
 
 -----------------------------------------------------
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS "menuItem" (
     REFERENCES "vendor" ("vendor_id")
 );
 
--- Index on vendor_id
+-- Index on vendor_id (FK)
 CREATE INDEX IF NOT EXISTS "fk_menuItem_vendor1_idx" ON "menuItem" ("vendor_id");
 
 -----------------------------------------------------
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS "order" (
     REFERENCES "user" ("user_id")
 );
 
--- Index on user_id
+-- Index on user_id (FK
 CREATE INDEX IF NOT EXISTS "fk_order_user1_idx" ON "order" ("user_id");
 
 -----------------------------------------------------
@@ -104,7 +104,7 @@ CREATE INDEX IF NOT EXISTS "fk_orderItem_menuItem1_idx" ON "orderItem" ("menuIte
 
 
 -----------------------------------------------------
--- Triggers for "updated_at"
+-- Triggers to make the updated_at field auto-update
 -----------------------------------------------------
 
 -- User Table Trigger
@@ -144,22 +144,22 @@ BEGIN
 END;
 
 -----------------------------------------------------
--- Insert Dummy Data
+-- Example Data - Based on TENZ restaurant and its menu.
 -----------------------------------------------------
--- DUMMY DATA FOR TESTING
 
--- 1. Insert  "user"
+
+-- 1. "user"
 INSERT INTO "user" ("user_id", "username", "password", "student_number", "name", "surname", "date_of_birth", "cell_number", "email", "user_type") VALUES
 (1, 'willemk100', 'p@ssword1', 'u04868260', 'Willem', 'Kleynhans', '2004-03-17', '0812345678', 'willem@uni.com', 'admin'),
 (2, 'jessM100', 'p@ssword2', 'u23232323', 'Jessica', 'Muller', '2000-11-20', '0729876543', 'jess@uni.com', 'user'),
 (3, 'jmk200', 'p@ssword3', 'u01234566', 'Ayden', 'Bouwer', '2004-09-17', '081234567', 'AydenB@uni.com', 'user');
 
 
--- 2. Insert  "vendor"
+-- 2. "vendor"
 INSERT INTO "vendor" ("vendor_id", "name", "location", "phone_number", "email", "password", "bank_name", "account_number", "branch_code") VALUES
 (101, 'Tenz', 'University of Pretoria, Akanyang Building, 68 Lunnon Rd, Hatfield, Pretoria, 0028', '0662230306', 'tenz@up.com', 'tenzpassword', 'FNB', '62112233445', '250655');
 
--- 3. Insert  "menuItem"
+-- 3. "menuItem"
 INSERT INTO "menuItem" ("menuItem_id", "vendor_id", "catagory", "name", "price", "cost") VALUES
 (1001, 101, 'Tramezini', 'Cheese & Tomato', 43.90, 25.00),
 (1002, 101, 'Tramezini', 'Bacon & Cheese', 51.90, 26.90),
@@ -174,12 +174,12 @@ INSERT INTO "menuItem" ("menuItem_id", "vendor_id", "catagory", "name", "price",
 (1011, 101, 'Burgers', 'Chicken', 34.90, 26.90),
 (1012, 101, 'Burgers', 'Rib', 34.90, 26.90);
 
--- 4. Insert into "order"
+-- 4. "order"
 INSERT INTO "order" ("order_id", "user_id", "status") VALUES
 (1001, 2, 'Collected'), 
 (1002, 2, 'Submitted');
 
--- 5. Insert into "orderItem" 
+-- 5. "orderItem" 
 INSERT INTO "orderItem" ("order_order_id", "menuItem_menuItem_id", "quantity", "price_per_item") VALUES
 (1001, 1001, 1, 43.90),
 (1001, 1005, 2, 32.50),
