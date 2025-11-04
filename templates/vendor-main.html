@@ -1,0 +1,272 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor - Food Ordering Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
+            <div class="container">
+                
+                <a class="navbar-brand" style="color: ghostwhite;">
+                    <img src="images/up-logo.png" alt="UPLogo" width="90" height="30" aria-hidden="true" class="d-inline-block align-text-top-left"> 
+                    Food Ordering Platform
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="container nav">
+                    
+                    <!-- Orders -->
+                     <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: ghostwhite;text-decoration: underline;" href="vendor-main.html" aria-current="page">
+                                <i class="bi bi-cup-straw me-1" aria-hidden="true"></i>
+                                Orders
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Edit Menu -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: ghostwhite;" href="Vendor_Menu.html" aria-current="page">
+                                <i class="bi bi-file-text me-1" aria-hidden="true"></i>
+                                Edit Menu
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Analytics -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="color: ghostwhite; " href="Vendor-Analytics.html"   aria-current="page">
+                                <i class="bi bi-bar-chart me-1" aria-hidden="true"></i>
+                                Analytics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" style="color: ghostwhite;" href="login.html"><i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                            Log Out
+                        </a>
+                        </li>    
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mt-4" role="main">
+        <header class="mb-4">
+            <h1 class="h2">
+                <i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>Dashboard
+            </h1>
+        </header>
+        
+        <section class="mb-4" aria-labelledby="order-tracking-heading">
+            <h2 id="order-tracking-heading" class="h3 mb-3">Order Status for <span id="dynamicTrackingNumber">Order #001</span></h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="card-text text-muted">Current Status: <strong id="dynamicOrderStatus" class="text-danger">Awaiting Acceptance</strong></p>
+                    
+                    <div class="d-flex justify-content-between text-center mb-3 pt-2">
+                        <div class="col"><i class="bi bi-file-text-fill text-success fs-3" aria-hidden="true"></i><p class="small text-success mb-0">Received</p></div>
+                        <div class="col-1 align-self-center"><hr class="my-0"></div>
+                        <div class="col"><i class="bi bi-clock-history text-muted fs-3" aria-hidden="true"></i><p class="small text-muted mb-0">Preparing</p></div>
+                        <div class="col-1 align-self-center"><hr class="my-0"></div>
+                        <div class="col"><i class="bi bi-bag-check text-muted fs-3" aria-hidden="true"></i><p class="small text-muted mb-0">Ready</p></div>
+                    </div>
+
+                    <h4 class="h5 mt-4">Update Status:</h4>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                        <button class="btn btn-outline-success me-md-2" onclick="updateOrderStatus('Accepted', 'text-success')" role="button"><i class="bi bi-check-circle me-1" aria-hidden="true"></i>Accept Order</button>
+                        <button class="btn btn-outline-warning me-md-2" onclick="updateOrderStatus('Preparing', 'text-warning')" role="button"><i class="bi bi-hourglass-split me-1" aria-hidden="true"></i>Mark as Preparing</button>
+                        <button class="btn btn-outline-primary" onclick="updateOrderStatus('Ready for Pickup', 'text-primary')" role="button"><i class="bi bi-basket me-1" aria-hidden="true"></i>Mark as Ready</button>
+                    </div>
+
+                    <p class="mt-3 small text-danger">
+                        **NOTE:** The status change above only updates the display on this page. In a real system, the buttons would trigger a database update.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-3">
+
+        <section class="mb-5" aria-labelledby="live-orders-heading">
+            <h2 id="live-orders-heading" class="h3 mb-3 text-crimson">All Live Order Data 📝</h2>
+            
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-4">
+                    <label for="orderSelect" class="form-label fw-bold">Select Order ID to View Status:</label>
+                </div>
+                <div class="col-md-4">
+                    <select id="orderSelect" class="form-select" onchange="updateDisplayedOrder()">
+                        </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="orderTrackingTable" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order Tracking Number</th>
+                            <th>Order (Products)</th>
+                            <th>Order Cost (ZAR)</th>
+                            <th>Order Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-5 py-4">
+        <div class="container">
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="text-muted small">&copy; 2025 Food Ordering Platform. All rights reserved.</p>
+                        Read our
+                        <a href="#" class="text-decoration-none">Privacy Policy</a> 
+                        and 
+                        <a href="#" class="text-decoration-none">Terms of Service</a>
+                        here.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <script>
+        // --- 1. Define the Data ---
+        const MENU_ITEMS = [
+            "Chicken Wrap (Chicken Mayo)", "Beef Burger (Double Beef)", "Trammezini (Spinach & Feta)", 
+            "Fries (Large)", "Chicken Wrap (Veg)", "Beef Burger (Veggie Patty)", "Trammezini (Chicken & Bacon)"
+        ];
+
+        function getRandomOrder() {
+            const numItems = Math.floor(Math.random() * 3) + 1;
+            const orderParts = [];
+            for (let i = 0; i < numItems; i++) {
+                const item = MENU_ITEMS[Math.floor(Math.random() * MENU_ITEMS.length)];
+                const quantity = Math.floor(Math.random() * 3) + 1;
+                orderParts.push(`${quantity}x ${item}`);
+            }
+            return orderParts.join(', ');
+        }
+
+        function getRandomCost() {
+            const cost = (Math.random() * 250 + 50).toFixed(2); 
+            return `R ${cost}`;
+        }
+
+        function generateOrdersData() {
+            const data = [];
+            for (let i = 1; i <= 8; i++) {
+                const trackingID = `#${String(i).padStart(3, '0')}`;
+                const isPaid = Math.random() > 0.4;
+                
+                data.push({
+                    trackingID: trackingID,
+                    order: getRandomOrder(),
+                    cost: getRandomCost(),
+                    feeStatus: isPaid ? 'Paid' : 'Unpaid'
+                });
+            }
+            return data;
+        }
+
+        const ORDERS_DATA = generateOrdersData();
+
+
+        // --- 2. Initialization and Population ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderSelect = document.getElementById('orderSelect');
+            const orderTableBody = document.querySelector('#orderTrackingTable tbody');
+
+            // Populate Dropdown and Table
+            ORDERS_DATA.forEach(order => {
+                // Populate Dropdown
+                const option = document.createElement('option');
+                option.value = order.trackingID;
+                option.textContent = `Order ${order.trackingID}`;
+                orderSelect.appendChild(option);
+
+                // Populate Table Row
+                const row = orderTableBody.insertRow();
+                row.setAttribute('data-tracking-id', order.trackingID);
+                
+                row.insertCell().textContent = order.trackingID; 
+                row.insertCell().textContent = order.order;
+                row.insertCell().textContent = order.cost;
+                
+                const feeCell = row.insertCell();
+                feeCell.textContent = order.feeStatus;
+                feeCell.classList.add(order.feeStatus === 'Paid' ? 'text-success' : 'text-danger', 'fw-bold');
+            });
+
+            // Set the initial displayed tracking number (it will be #001 by default)
+            updateDisplayedOrder();
+        });
+
+        
+        // --- 3. Dynamic Functionality ---
+
+        // Function to update the Order Status card based on the selected order ID
+        function updateDisplayedOrder() {
+            const orderSelect = document.getElementById('orderSelect');
+            const dynamicTrackingNumber = document.getElementById('dynamicTrackingNumber');
+            
+            // Get the value from the select element (e.g., #001)
+            const selectedTrackingID = orderSelect.value; 
+
+            if (selectedTrackingID) {
+                // *** THE KEY EDIT IS HERE: Synchronize the Order Status header with the selected dropdown value ***
+                dynamicTrackingNumber.textContent = selectedTrackingID + " (Tenz Express)";
+                
+                // Reset status text when switching orders (simulate looking up a new order)
+                // This mimics how the status would change when focusing on a new order ID
+                document.getElementById('dynamicOrderStatus').textContent = 'Awaiting Acceptance';
+                document.getElementById('dynamicOrderStatus').className = 'text-danger';
+            } else {
+                dynamicTrackingNumber.textContent = "N/A";
+            }
+        }
+        
+        // Function to simulate a status change on the Order Status card
+        function updateOrderStatus(statusText, statusColorClass) {
+            const dynamicOrderStatus = document.getElementById('dynamicOrderStatus');
+            const orderTrackingHeading = document.getElementById('order-tracking-heading');
+
+            // 1. Update the status text
+            dynamicOrderStatus.textContent = statusText;
+
+            // 2. Update the status color (reset and add new class)
+            dynamicOrderStatus.className = '';
+            dynamicOrderStatus.classList.add(statusColorClass);
+
+            // 3. Simple animation to show the update (optional)
+            orderTrackingHeading.classList.add('animate-status-change');
+            setTimeout(() => {
+                orderTrackingHeading.classList.remove('animate-status-change');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
