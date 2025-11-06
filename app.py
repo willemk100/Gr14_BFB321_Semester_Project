@@ -277,7 +277,7 @@ def vendor_home():
 #End of Vendor home page
 #===============================================================
 
-#vendor menu page (vendor_menu_edit.html)
+#vendor menu editing page (vendor_menu_edit.html)
 #===============================================================    
 @app.route('/vendor_menu_edit')
 def vendor_menu_edit():
@@ -300,12 +300,50 @@ def vendor_menu_edit():
         menu_items=menu_items,
         categories=categories
     )
-#End of vendor menu page
+#End of vendor menu editing page
 #===============================================================
 
 #vendor new menu item page (vendor_new_menu_item.html)
 #===============================================================
-#!! code
+@app.route('/vendor_new_menu_item', methods=['GET', 'POST'])
+def vendor_new_menu_item():
+    if session.get('user_type') != 'vendor':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST' and request.form.get('action') == 'confirm':
+        vendor_id = session['vendor_id']
+        name = request.form['name'].strip()
+        category = request.form['category'].strip()
+        price = request.form['price'].strip()
+        cost = request.form['cost'].strip()
+
+        # Validation: all fields filled + up to 2 decimals
+        decimal_pattern = r'^\d+(\.\d{1,2})?$'
+        if not name or not category or not price or not cost:
+            flash("Please fill in all fields.", "danger")
+            return redirect(url_for('vendor_new_menu_item'))
+        if not re.match(decimal_pattern, price) or not re.match(decimal_pattern, cost):
+            flash("Price and Cost must be numbers with up to 2 decimals and no 'R'.", "danger")
+            return redirect(url_for('vendor_new_menu_item'))
+
+        price = float(price)
+        cost = float(cost)
+
+        # Insert into DB for current vendor
+        conn = get_db_connection()
+        conn.execute(
+            'INSERT INTO menuItem (vendor_id, name, category, price, cost) VALUES (?, ?, ?, ?, ?)',
+            (vendor_id, name, category, price, cost)
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Menu item added successfully.", "success")
+        # Redirect back to Vendor Menu page
+        return redirect(url_for('vendor_menu_edit'))
+
+    # GET request shows the form
+    return render_template('vendor_new_menu_item.html')
 
 
 
