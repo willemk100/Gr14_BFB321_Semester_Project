@@ -85,15 +85,15 @@
             </div>
         </div>
 
-        <!-- Start of the table -->
+        <!-- Start of the tables -->
         {% for category in categories %}
             <h3 class="h4 mt-4 mb-3 border-bottom pb-2">{{ category }}</h3>
-            <div class="table-responsive shadow-sm mb-5">
+            <div class="tabl
+            e-responsive shadow-sm mb-5">
             <table class="table table-hover align-middle">
                 <thead class="text-white" style="background-color: crimson !important;">
                 <tr>
                     <th>Name</th>
-                    <th>Description</th>
                     <th class="text-end">Selling Price</th>
                     <th class="text-end">Estimated Cost</th>
                     <th class="text-center">Actions</th>
@@ -104,7 +104,6 @@
                     {% if item.category == category %}
                     <tr>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.description or '' }}</td>
                         <td class="text-end">R{{ "%.2f"|format(item.price) }}</td>
                         <td class="text-end">R{{ "%.2f"|format(item.cost) }}</td>
                         <td class="text-center">
