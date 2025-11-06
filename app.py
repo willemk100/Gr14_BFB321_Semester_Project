@@ -102,6 +102,21 @@ def admin_home():
     vendors = conn.execute('SELECT * FROM vendor').fetchall()
     conn.close()
     return render_template('admin_main.html', vendors=vendors)
+
+
+# Delete vendor on admin_home page
+#===============================================================
+@app.route('/admin_home/delete_vendor/<int:vendor_id>', methods=['POST'])
+def delete_vendor(vendor_id):
+    if session.get('user_type') != 'admin':
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    conn.execute('DELETE FROM vendor WHERE vendor_id = ?', (vendor_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin_home'))
+
 #End of Admin Home Page
 #===============================================================
 
