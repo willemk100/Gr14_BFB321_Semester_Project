@@ -153,6 +153,53 @@ def add_vendor():
 
 #End of Add vendor page
 #===============================================================
+
+
+#Edit vendor details page
+#===============================================================
+@app.route('/admin_home/edit_vendor/<int:vendor_id>', methods=['GET', 'POST'])
+def edit_vendor(vendor_id):
+    if session.get('user_type') != 'admin':
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    vendor = conn.execute('SELECT * FROM vendor WHERE vendor_id = ?', (vendor_id,)).fetchone()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        location = request.form['location']
+        phone_number = request.form['phone_number']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
+        bank_name = request.form['bank_name']
+        account_number = request.form['account_number']
+        branch_code = request.form['branch_code']
+
+        conn.execute('UPDATE vendor SET name = ?, location = ?, phone_number = ?, email = ?, username = ?, password = ?, bank_name = ?, account_number = ?, branch_code = ? WHERE vendor_id = ?',
+                     (name, location, phone_number, email, username, password, bank_name, account_number, branch_code, vendor_id))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('admin_home'))
+
+    conn.close()
+    return render_template('admin_edit_vendor_details.html', vendor=vendor)
+
+
+
+
+
+
+
+
+
+
+
+#End of Edit vendor details page
+#===============================================================
+
+
+
 #End of ADMIN SECTION!!!
 #***************************************************************
 

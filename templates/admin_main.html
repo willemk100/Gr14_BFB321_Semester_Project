@@ -42,7 +42,7 @@
                     <thead class="table-secondary">
                         <tr>
                             <th scope="col" class="fw-bold">Vendor</th>
-                            <th scope="col" class="fw-bold">Details</th>
+                            <!-- <th scope="col" class="fw-bold">Details</th> -->
                             <th scope="col" class="fw-bold">Edit</th>
                             <th scope="col" class="fw-bold">Remove</th>
                         </tr>
@@ -51,8 +51,8 @@
                         {%for vendor in vendors%}
                         <tr class="table-light">
                             <td>{{vendor.name}}</td>
-                            <td><a href="admin_edit_vendor_details.html" class="text-decoration-none">See details</a></td>
-                            <td><a href="admin_edit_vendor_details.html" class="btn btn-sm btn-outline-secondary">Edit vendor</a></td>
+                            <!-- <td><a href="admin_edit_vendor_details.html" class="text-decoration-none">See details</a></td> -->
+                            <td><a href="{{ url_for('edit_vendor', vendor_id=vendor.vendor_id) }}" class="btn btn-sm btn-outline-secondary">Edit vendor</a></td>
                             <td><a href="admin_admin_new_vendor.html" class="btn btn-sm btn-outline-danger">Remove</a></td>
                         </tr>
                         {%endfor%}
