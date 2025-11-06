@@ -2,7 +2,7 @@
 #***********************************************************
 # Main Application File: app.py
 #===========================================================
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 
 app = Flask(__name__)
@@ -335,23 +335,25 @@ def vendor_new_menu_item():
     categories = sorted({item['category'] for item in menu_items})
 
     if request.method == 'POST':
-        # Get form values
         name = request.form.get('name', '').strip()
-        description = request.form.get('description', '').strip()
         existing_category = request.form.get('existing_category', '').strip()
         new_category = request.form.get('new_category', '').strip()
         price = request.form.get('price', '').strip()
         cost = request.form.get('cost', '').strip()
 
-        # Determine category
+        errors = []
+
+        # Validate category choice
+        if existing_category and new_category:
+            errors.append("Please either select an existing category or type a new one, not both.")
+        elif not existing_category and not new_category:
+            errors.append("You must select an existing category or enter a new category.")
+
         category = new_category if new_category else existing_category
 
-        # Basic validations
-        errors = []
+        # Validate other fields
         if not name:
             errors.append("Item name is required.")
-        if not category:
-            errors.append("You must select or enter a category.")
         try:
             price_val = float(price)
             if round(price_val, 2) != price_val or price_val < 0:
@@ -365,12 +367,13 @@ def vendor_new_menu_item():
         except ValueError:
             errors.append("Estimated cost must be a valid number.")
 
+        # If any errors, show them
         if errors:
             for e in errors:
                 flash(e, 'danger')
             return render_template('vendor_new_menu_item.html', categories=categories)
 
-        # Insert new menu item
+        # Insert new item into database
         conn.execute(
             'INSERT INTO menuItem (vendor_id, category, name, price, cost) VALUES (?, ?, ?, ?, ?)',
             (vendor_id, category, name, price_val, cost_val)
