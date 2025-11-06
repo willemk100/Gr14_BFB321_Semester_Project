@@ -230,7 +230,7 @@ def vendor_home():
 #End of Vendor home page
 #===============================================================
 
-#vendor menu page (vendor_menu.html)
+#vendor menu page (vendor_menu_edit.html)
 #===============================================================    
 @app.route('/vendor_menu')
 def vendor_menu():
@@ -249,7 +249,7 @@ def vendor_menu():
     categories = sorted({item['category'] for item in menu_items})
 
     return render_template(
-        'vendor_menu.html',
+        'vendor_menu_edit.html',
         menu_items=menu_items,
         categories=categories
     )
