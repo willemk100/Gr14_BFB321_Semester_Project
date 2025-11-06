@@ -85,105 +85,38 @@
             </div>
         </div>
 
-        <!-- First Heading Will need to find a way to connect this and add new headings from database -->
-        <h3 class="h4 mt-4 mb-3 border-bottom pb-2">Burgers </h3>
-
-        <!-- Burgers Table  -->
-        <div class="table-responsive shadow-sm mb-5">
-            <table class="table table-hover align-middle">
-                <!-- Table headings this will stay constant -->
-                <thead class="text-white" style="background-color: crimson !important;">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col" class="text-end">Selling Price</th>
-                        <th scope="col" class="text-end">Estimated Cost</th>
-                        <th scope="col" class="text-center">Actions</th>
-                    </tr>
-                </thead>
-
-                <!-- This will need to be auto generated from user inputs that are saved to a database -->
-                <tbody>
-                    <tr>
-                        <!-- Will need to populate these fiels from the database -->
-                        <td>Cheese Burger</td>
-                        <td>Beef patty with lettuce, tomato, and cheese.</td>
-                        <td class="text-end">R55.00</td>
-                        <td class="text-end">R25.00</td>
-                        <td class="text-center">
-                            <!-- Buttons need to be activated -->
-                              <!-- Edit button -->
-                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#editModal-1">
-                                <i class="bi bi-pencil" aria-hidden="true"></i>
-                                 Edit
-                            </button>
-                            <!-- Remove Button -->
-                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal-1">
-                                <i class="bi bi-trash" aria-hidden="true"></i>
-                                 Remove
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Bacon Burger</td>
-                        <td>Beef patty, lettuce, bacon, and cheese. </td>
-                        <td class="text-end">R48.00</td>
-                        <td class="text-end">R22.00</td>
-                        <td class="text-center">
-                            <!-- Edit button -->
-                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#editModal-2">
-                                <i class="bi bi-pencil" aria-hidden="true"></i> 
-                                Edit
-                            </button>
-                            <!-- Remove button -->
-                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal-2">
-                                <i class="bi bi-trash" aria-hidden="true"></i> 
-                                Remove
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <!-- Item 2 heading -->
-        <h3 class="h4 mt-4 mb-3 border-bottom pb-2">Wraps</h3>
-
-        <!-- Wraps Table  -->
-        <div class="table-responsive shadow-sm mb-5">
-            <table class="table table-hover align-middle">
-                <thead class="text-white" style="background-color: crimson !important;">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col" class="text-end">Selling Price</th>
-                        <th scope="col" class="text-end">Estimated Cost</th>
-                        <th scope="col" class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <!-- Table content -->
-                         <!-- NB need to update from DB -->
-                        <td>Chicken Wrap</td>
-                        <td>Chicken, lettuce and tamato wrap.</td>
-                        <td class="text-end">R45.00</td>
-                        <td class="text-end">R20.00</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#editModal-3">
-                                <i class="bi bi-pencil" aria-hidden="true"></i> 
-                                Edit
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeModal-3">
-                                <i class="bi bi-trash" aria-hidden="true"></i>
-                                Remove
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        {% for category in categories %}
+<h3 class="h4 mt-4 mb-3 border-bottom pb-2">{{ category }}</h3>
+<div class="table-responsive shadow-sm mb-5">
+  <table class="table table-hover align-middle">
+    <thead class="text-white" style="background-color: crimson !important;">
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th class="text-end">Selling Price</th>
+        <th class="text-end">Estimated Cost</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in menu_items %}
+        {% if item.category == category %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description or '' }}</td>
+            <td class="text-end">R{{ "%.2f"|format(item.price) }}</td>
+            <td class="text-end">R{{ "%.2f"|format(item.cost) }}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-info me-2">Edit</button>
+              <button class="btn btn-sm btn-outline-danger">Remove</button>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endfor %}
 
         <!-- ADD new Item button -->        
         <div class="text-center mt-5">

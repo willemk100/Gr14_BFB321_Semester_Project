@@ -232,11 +232,27 @@ def vendor_home():
 
 #vendor menu page (vendor_menu.html)
 #===============================================================    
-#!! code
+@app.route('/vendor_menu')
+def vendor_menu():
+    if session.get('user_type') != 'vendor':
+        return redirect(url_for('login'))
 
+    vendor_id = session['vendor_id']  # Logged-in vendor
+    conn = get_db_connection()
+    
+    menu_items = conn.execute(
+        'SELECT * FROM menuItem WHERE vendor_id = ?', (vendor_id,)
+    ).fetchall()
+    conn.close()
 
+    menu_items = [dict(item) for item in menu_items]
+    categories = sorted({item['category'] for item in menu_items})
 
-
+    return render_template(
+        'vendor_menu.html',
+        menu_items=menu_items,
+        categories=categories
+    )
 #End of vendor menu page
 #===============================================================
 
