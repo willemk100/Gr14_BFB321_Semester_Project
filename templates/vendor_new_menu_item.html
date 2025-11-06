@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Menu Item - Food Ordering Platform</title>
+    <title>Vendor Registration - Food Ordering Platform</title>
     <link rel="stylesheet" href="styles.css">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
@@ -13,16 +13,16 @@
         <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
             <div class="container">
                 <a class="navbar-brand" style="color: ghostwhite;" >
-                    <img src="images/up-logo.png" alt="UPLogo" width="100" height="30" aria-hidden="true" class="d-inline-block align-text-top">
+                    <img src="{{ url_for('static', filename='up-logo.png') }}" alt="UPLogo" width="100" height="30" aria-hidden="true" class="d-inline-block align-text-top">
                     Food Ordering Platform
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" style="color: ghostwhite;" href="login.html">
+                            <a class="nav-link" style="color: ghostwhite;" href="{{ url_for('logout') }}">
                                 <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
                                 Log Out
                             </a>
@@ -35,6 +35,8 @@
 
     <main class="container py-5">
         <div class="mx-auto border shadow-lg p-4 p-md-5" style="max-width: 600px; background-color: #f8f9fa;">
+            <a href="{{ url_for('vendor_menu_edit') }}" class="text-decoration-none fw-semibold position-absolute top-0 end-0 mt-3 me-3 btn btn-outline-primary">Back</a>
+            
             <header class="text-center mb-4">
                 <i class="bi bi-egg-fried fs-1"></i>
                 <h1 class="mt-3 h3">Add New Menu Item</h1>
@@ -51,7 +53,7 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-                
+
             <form action="{{ url_for('vendor_new_menu_item') }}" method="POST">
 
 
