@@ -67,7 +67,59 @@ def customer_home():
 def admin_home():
     if session.get('user_type') != 'admin':
         return redirect(url_for('login'))
-    return render_template('vendor_admin.html')
+    conn = get_db_connection()
+    vendors = conn.execute('SELECT * FROM vendor').fetchall()
+    conn.close()
+    return render_template('vendor_admin.html', vendors=vendors)
+
+####################################
+
+# Add vendor page
+@app.route('/admin_home/add_vendor', methods=['GET', 'POST'])
+def add_vendor():
+    if session.get('user_type') != 'admin':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+
+        conn = get_db_connection()
+
+        vendors = conn.execute('SELECT * FROM vendor').fetchall()
+
+        vendors_ids = [vendor['vendor_id'] for vendor in vendors]
+        last_id = max(vendors_ids) if vendors_ids else 0
+        new_vendor_id = last_id + 1
+
+        name = request.form['name']
+        location = request.form['location']
+        phone_number = request.form['phone_number']
+        email = request.form['email']
+        username = request.form['username']
+        password = request.form['password']
+        password_confirm = request.form['password_confirm']
+        bank_name = request.form['bank_name']
+        account_number = request.form['account_number']
+        branch_code = request.form['branch_code']
+
+        
+
+        if password != password_confirm:
+            conn.close()
+            return render_template('new_vendor.html', error='Passwords do not match')
+
+         # Insert new vendor into the database
+        
+        conn.execute('INSERT INTO vendor (vendor_id, name, location, phone_number, email, username, password, bank_name, account_number, branch_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+
+                     (new_vendor_id, name, location, phone_number, email, username, password, bank_name, account_number, branch_code))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('admin_home'))
+
+    return render_template('new_vendor.html')
+
+######################################
 
 # Vendor home page
 @app.route('/vendor_home')
@@ -98,7 +150,7 @@ def vendor_menu(vendor_id):
     # Format prices to 2 decimal places
     for item in menu_items:
         item['price'] = f"{item['price']:.2f}"
-        
+
     categories = sorted({item['category'] for item in menu_items})
     return render_template('menu.html', menu_items=menu_items, selected_vendor=selected_vendor, categories = categories)
 

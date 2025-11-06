@@ -40,83 +40,111 @@
 
             <!-- <h1 class="h3 text-center mb-4">Insert Your Details</h1> -->
             <header class="text-center mb-4">
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
                 <i class="bi bi-building-fill-add fs-1" aria-hidden="true"></i>
                 <h3 class="text-center mb-2">Insert your details</h3>
                 <p class="text-center text-muted mb-4">Create your vendor account</p>
             </header>
 
+
+<!-- Form for adding new vendors-->
+
+
             <form action="#" method="POST">
 
                 <div class="row mb-3 align-items-center">
-                    <label for="vendorName" class="col-sm-4 col-form-label text-end-custom">Vendor Name</label>
+                    <label for="vendorName" class="col-sm-4 col-form-label text-end-custom" >Vendor Name</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="vendorName" placeholder="Name" required aria-required="true">
-                    </div>
-                </div>
-
-                <div class="row mb-3 align-items-center">
-                    <label for="description" class="col-sm-4 col-form-label text-end-custom">Description</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="description" placeholder="Description" required aria-required="true">
+                        <input type="text" class="form-control" id="floatingInput" name= "name" placeholder="Vendor Name" required aria-required="true">
                     </div>
                 </div>
 
                 <div class="row mb-3 align-items-center">
                     <label for="location" class="col-sm-4 col-form-label text-end-custom">Location</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="location" placeholder="Address" required aria-required="true">
+                        <input type="text" class="form-control" id="floatingInput" name="location" placeholder="Location" required aria-required="true">
                     </div>
                 </div>
 
                 <div class="row mb-3 align-items-center">
-                    <label for="phoneNumber" class="col-sm-4 col-form-label text-end-custom">Phone Number</label>
+                    <label for="phone_number" class="col-sm-4 col-form-label text-end-custom">Phone Number</label>
                     <div class="col-sm-8">
-                        <input type="tel" class="form-control" id="phoneNumber" placeholder="Contact Number" required aria-required="true">
+                        <input type="tel" class="form-control" id="floatingInput" name="phone_number" placeholder="012 345 6789" required aria-required="true">
                     </div>
                 </div>
 
                 <div class="row mb-3 align-items-center">
                     <label for="email" class="col-sm-4 col-form-label text-end-custom">Email</label>
                     <div class="col-sm-8">
-                        <input type="email" class="form-control" id="email" placeholder="Email" required aria-required="true">
+                        <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email" required aria-required="true">
                     </div>
                 </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="username" class="col-sm-4 col-form-label text-end-custom">Username</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="password" class="col-sm-4 col-form-label text-end-custom">Password</label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="floatingInput" name="password" placeholder="Password" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label for="confirmPassword" class="col-sm-4 col-form-label text-end-custom">Confirm Password</label>
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="floatingInput" name="password_confirm" placeholder="Confirm Password" required aria-required="true">
+                    </div>
+                </div>
+
                 
+
+
+                <div class="row mb-3 align-items-center">
+                    <label for="bank_name" class="col-sm-4 col-form-label text-end-custom">Bank Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="floatingInput" name="bank_name" placeholder="Bank Name" required aria-required="true">
+                    </div>
+                </div>
+
                 <div class="row mb-3 align-items-center">
                     <label for="accountNumber" class="col-sm-4 col-form-label text-end-custom">Account Number</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control bg-light text-muted text-center fst-italic" id="accountNumber" value="Account Number" readonly>
+                        <input type="text" class="form-control" id="floatingInput" name="account_number" placeholder="Account Number" required aria-required="true">
                     </div>
                 </div>
 
                 <div class="row mb-3 align-items-center">
-                    <label for="bankName" class="col-sm-4 col-form-label text-end-custom">Bank Name</label>
+                    <label for="branch_code" class="col-sm-4 col-form-label text-end-custom">Branch Code</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control bg-light text-muted text-center fst-italic" id="bankName" value="Bank Name" readonly>
-                    </div>
-                </div>
-
-                <div class="row mb-3 align-items-center">
-                    <label for="vendorPassword" class="col-sm-4 col-form-label text-end-custom">Set Password</label>
-                    <div class="col-sm-8">
-                        <input type="password" class="form-control bg-light text-muted text-center" id="vendorPassword" placeholder="Set a Password" required aria-required="true">
-                    </div>
-                </div>
-
-                <div class="row mb-4 align-items-center">
-                    <label for="confirmPassword" class="col-sm-4 col-form-label text-end-custom">Confirm Password</label>
-                    <div class="col-sm-8">
-                        <input type="password" class="form-control bg-light text-muted text-center" id="confirmPassword" placeholder="Confirm Password" required aria-required="true">
+                        <input type="text" class="form-control" id="floatingInput" name=branch_code placeholder="Branch Code" required aria-required="true">
                     </div>
                 </div>
 
                 <hr class="my-4">
                 <div class="d-grid gap-2">
-                    <a href="login.html"  class="btn btn-lg text-white"  style="background-color: crimson;" aria-label="Add new vendor">
-                        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+
+                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                                        <!-- <i aria-hidden="true"></i> -->
+                                        I'm hungry, let's go!</button>
+
+                    <button type ="submit"  class="btn btn-lg text-white"  style="background-color: crimson;">
+                        <i class="bi bi-plus-circle me-2"></i>
                         Add new Vendor
-                    </a>
+                    </button>
                 </div>
+
+                
+
 
             </form>
         </div>

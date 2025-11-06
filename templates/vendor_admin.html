@@ -13,7 +13,7 @@
         <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
             <div class="container">
                 <a class="navbar-brand" style="color: ghostwhite;" >
-                    <img src="images/up-logo.png" alt="UPLogo" width="100" height="30" aria-hidden="true" class="d-inline-block align-text-top">
+                    <img src="{{ url_for('static', filename='up-logo.png') }}" alt="UPLogo" width="100" height="30" aria-hidden="true" class="d-inline-block align-text-top">
                     Food Ordering Platform
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,18 +48,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {%for vendor in vendors%}
                         <tr class="table-light">
-                            <td>Vendor 1</td>
+                            <td>{{vendor.name}}</td>
                             <td><a href="edit_vendor_details.html" class="text-decoration-none">See details</a></td>
                             <td><a href="edit_vendor_details.html" class="btn btn-sm btn-outline-secondary">Edit vendor</a></td>
                             <td><a href="new_vendor.html" class="btn btn-sm btn-outline-danger">Remove</a></td>
                         </tr>
-                        <tr class="table-light">
-                            <td>Vendor 2</td>
-                            <td><a href="edit_vendor_details.html" class="text-decoration-none">See details</a></td>
-                            <td><a href="edit_vendor_details.html" class="btn btn-sm btn-outline-secondary">Edit Vendor</a></td>
-                            <td><a href="new_vendor.html" class="btn btn-sm btn-outline-danger">Remove</a></td>
-                        </tr>
+                        {%endfor%}
                         </tbody>
                 </table>
             </div>
