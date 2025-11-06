@@ -1,3 +1,5 @@
+#INITIAL SETUP!!!
+#***********************************************************
 # Main Application File: app.py
 #===========================================================
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -5,6 +7,7 @@ import sqlite3
 
 app = Flask(__name__)
 app.secret_key = '12345'  # Needed for session management # I do not know what for
+# End of Main Application File
 #===========================================================
 
 # Database connection function
@@ -15,7 +18,13 @@ def get_db_connection():
     return conn
 # End of Database connection function
 #===========================================================
+#End of INITIAL SETUP!!!
+#***********************************************************
 
+
+
+#LOGIN AND NEW USER PAGES!!!
+#***********************************************************
 #Login Page - Where everything starts
 #===========================================================
 @app.route('/', methods=["GET", 'POST'])
@@ -58,7 +67,7 @@ def login():
 #End of Login Page
 #===========================================================
 
-#For log out
+# Log out funcion
 #===========================================================
 @app.route('/logout')
 def logout():
@@ -67,7 +76,19 @@ def logout():
 #End of log out
 #===========================================================
 
-#Now we move to different user sections
+#New Customer Registration Page
+#===========================================================
+
+
+
+#End of New Customer Registration Page
+#===========================================================
+#End of LOGIN AND NEW USER PAGES!!!
+#***********************************************************
+
+
+
+#Now we move to different user sections!!!!
  
 #ADMIN SECTION!!!
 #************************************************************
@@ -84,9 +105,8 @@ def admin_home():
 #End of Admin Home Page
 #===============================================================
 
-#New vendor page
+#Add vendor page
 #===============================================================
-# Add vendor page
 @app.route('/add_vendor', methods=['GET', 'POST'])
 def add_vendor():
     if session.get('user_type') != 'admin':
@@ -131,7 +151,7 @@ def add_vendor():
 
     return render_template('new_vendor.html')
 
-#End of new vendor page
+#End of Add vendor page
 #===============================================================
 #End of ADMIN SECTION!!!
 #***************************************************************
@@ -179,6 +199,8 @@ def vendor_menu(vendor_id):
 
 #End of Menu section
 #================================================================
+
+
 #End of CUSTOMER SECTION!!!
 #***************************************************************
 
@@ -198,12 +220,17 @@ def vendor_home():
 #***************************************************************
     
 
+
+#FINAL SETUP!!!
+#***********************************************************
 #Run the app
 #===========================================================
 if __name__ == '__main__':
     app.run(debug=True)
 # End of app run
 #===========================================================
+#End of FINAL SETUP!!!
+#***********************************************************
 
 
 
