@@ -325,42 +325,64 @@ def vendor_new_menu_item():
     if session.get('user_type') != 'vendor':
         return redirect(url_for('login'))
 
-    if request.method == 'POST' and request.form.get('action') == 'confirm':
-        vendor_id = session['vendor_id']
-        name = request.form['name'].strip()
-        category = request.form['category'].strip()
-        price = request.form['price'].strip()
-        cost = request.form['cost'].strip()
+    vendor_id = session['vendor_id']
+    conn = get_db_connection()
 
-        # Validation: all fields filled + up to 2 decimals
-        decimal_pattern = r'^\d+(\.\d{1,2})?$'
-        if not name or not category or not price or not cost:
-            flash("Please fill in all fields.", "danger")
-            return redirect(url_for('vendor_new_menu_item'))
-        if not re.match(decimal_pattern, price) or not re.match(decimal_pattern, cost):
-            flash("Price and Cost must be numbers with up to 2 decimals and no 'R'.", "danger")
-            return redirect(url_for('vendor_new_menu_item'))
+    # Fetch current categories for the dropdown
+    menu_items = conn.execute(
+        'SELECT category FROM menuItem WHERE vendor_id = ?', (vendor_id,)
+    ).fetchall()
+    categories = sorted({item['category'] for item in menu_items})
 
-        price = float(price)
-        cost = float(cost)
+    if request.method == 'POST':
+        # Get form values
+        name = request.form.get('name', '').strip()
+        description = request.form.get('description', '').strip()
+        existing_category = request.form.get('existing_category', '').strip()
+        new_category = request.form.get('new_category', '').strip()
+        price = request.form.get('price', '').strip()
+        cost = request.form.get('cost', '').strip()
 
-        # Insert into DB for current vendor
-        conn = get_db_connection()
+        # Determine category
+        category = new_category if new_category else existing_category
+
+        # Basic validations
+        errors = []
+        if not name:
+            errors.append("Item name is required.")
+        if not category:
+            errors.append("You must select or enter a category.")
+        try:
+            price_val = float(price)
+            if round(price_val, 2) != price_val or price_val < 0:
+                errors.append("Selling price must be a positive number with up to 2 decimals.")
+        except ValueError:
+            errors.append("Selling price must be a valid number.")
+        try:
+            cost_val = float(cost)
+            if round(cost_val, 2) != cost_val or cost_val < 0:
+                errors.append("Estimated cost must be a positive number with up to 2 decimals.")
+        except ValueError:
+            errors.append("Estimated cost must be a valid number.")
+
+        if errors:
+            for e in errors:
+                flash(e, 'danger')
+            return render_template('vendor_new_menu_item.html', categories=categories)
+
+        # Insert new menu item
         conn.execute(
-            'INSERT INTO menuItem (vendor_id, name, category, price, cost) VALUES (?, ?, ?, ?, ?)',
-            (vendor_id, name, category, price, cost)
+            'INSERT INTO menuItem (vendor_id, category, name, price, cost) VALUES (?, ?, ?, ?, ?)',
+            (vendor_id, category, name, price_val, cost_val)
         )
         conn.commit()
         conn.close()
 
-        flash("Menu item added successfully.", "success")
-        # Redirect back to Vendor Menu page
+        flash(f'Item "{name}" added successfully!', 'success')
         return redirect(url_for('vendor_menu_edit'))
 
-    # GET request shows the form
-    return render_template('vendor_new_menu_item.html')
-
-
+    conn.close()
+    return render_template('vendor_new_menu_item.html', categories=categories)
 
 #End of vendor new menu item page
 #===============================================================
