@@ -232,8 +232,8 @@ def vendor_home():
 
 #vendor menu page (vendor_menu_edit.html)
 #===============================================================    
-@app.route('/vendor_menu')
-def vendor_menu():
+@app.route('/vendor_menu_edit')
+def vendor_menu_edit():
     if session.get('user_type') != 'vendor':
         return redirect(url_for('login'))
 
