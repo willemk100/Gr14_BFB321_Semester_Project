@@ -199,22 +199,8 @@ def edit_vendor(vendor_id):
 
     conn.close()
     return render_template('admin_edit_vendor_details.html', vendor=vendor)
-
-
-
-
-
-
-
-
-
-
-
 #End of Edit vendor details page
 #===============================================================
-
-
-
 #End of ADMIN SECTION!!!
 #***************************************************************
 
