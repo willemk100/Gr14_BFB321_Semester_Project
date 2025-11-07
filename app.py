@@ -296,7 +296,7 @@ def vendor_home():
     
     # *** IMPORTANT: Get the logged-in vendor_id from the session. ***
     # For testing with your provided SQL data, we'll assume the logged-in vendor is 'Tenz' (vendor_id = 101).
-    vendor_id = session.get('user_id', 101) 
+    vendor_id = session['vendor_id'] 
     
     conn = get_db_connection()
     
