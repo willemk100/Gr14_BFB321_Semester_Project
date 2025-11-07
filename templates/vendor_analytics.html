@@ -71,6 +71,9 @@
         </nav>
     </header>
 
+    {% extends "base.html" %}
+    {% block content %}
+    <!-- Start of actual code -->
     <main class="container mt-4" role="main">
         <header class="mb-4">
             <h1 class="h2">
@@ -80,36 +83,19 @@
         </header>
     
     <!-- Vendor Performance Section -->
-    <h2 class="h3 mb-3">
-        Vendor Performance of Past:
-    </h2>
+    <h2 class="h3 mb-3">Vendor Performance of Past:</h2>
 
-    <!-- Selcting the time options for performance and sales table -->
-        <!-- Daily -->
+    <!-- Selcting the time options for performance metrics and sales table -->
+        <!-- buttons to filter by time period -->
         <div class="btn-group mb-4" role="group" aria-label="Time period selection">
-            <input type="radio" class="btn-check" name="time-filter" id="daily" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="daily" >
-                Day
-            </label>
-
-            <!-- Weekly -->
-            <input type="radio" class="btn-check" name="time-filter" id="weekly" autocomplete="off">
-            <label class="btn btn-outline-primary" for="weekly" >
-
-                Week
-            </label>
-
-            <!-- Monthly -->
-            <input type="radio" class="btn-check" name="time-filter" id="monthly" autocomplete="off">
-            <label class="btn btn-outline-primary" for="monthly">
-                Month
-            </label>
-
-            <!-- Yearly -->
-            <input type="radio" class="btn-check" name="time-filter" id="yearly" autocomplete="off">
-            <label class="btn btn-outline-primary" for="yearly" >
-                Year
-            </label>
+        <!-- Daily -->
+        <a href="{{ url_for('vendor_analytics', filter='daily') }}" class="btn btn-outline-primary {% if filter_option == 'daily' %}active{% endif %}">Day</a>
+        <!-- Weekly -->
+        <a href="{{ url_for('vendor_analytics', filter='weekly') }}" class="btn btn-outline-primary {% if filter_option == 'weekly' %}active{% endif %}">Week</a>
+        <!--Monthly -->
+        <a href="{{ url_for('vendor_analytics', filter='monthly') }}" class="btn btn-outline-primary {% if filter_option == 'monthly' %}active{% endif %}">Month</a>
+        <!--Yearly-->
+        <a href="{{ url_for('vendor_analytics', filter='yearly') }}" class="btn btn-outline-primary {% if filter_option == 'yearly' %}active{% endif %}">Year</a>
         </div>
 
 
@@ -119,34 +105,25 @@
             <!-- Completed Orders -->
             <div class="col">
                 <div class="card text-center h-100 shadow-sm">
-                    <div class="card-header text-muted small">
-                        Completed Orders
+                    <div class="card-header text-muted small"> Completed Orders</div>
+                        <div class="card-body">
+                            <h4 class="card-title display-6 fw-bold">
+                                {{ completed_orders }}
+                            </h4>
+                        </div>
                     </div>
-                    
-                    <!-- Body of placeholder -->
-                    <div class="card-body">
-                        <!--Will need to display calculated value and change according to the selected time period  -->
-                        <h4 class="card-title display-6 fw-bold">
-                            85 
-                            <!-- calculation needed in future -->
-                        </h4>
-                    </div>
-                </div>
             </div>
 
-            <!-- Revenue -->
 
+            <!-- Revenue -->
             <div class="col">
                 <div class="card text-center h-100 shadow-sm">
-                    <div class="card-header text-muted small">
-                        Revenue
-                    </div>
+                    <div class="card-header text-muted small">Revenue</div>
                         <div class="card-body">
                             <h4 class="card-title display-6 fw-bold text-success">
-                                R2000.00
-                                <!-- Will need to calculate this value based on data -->
+                                R{{ "%.2f"|format(revenue) }}
                             </h4>
-                    </div>
+                        </div>
                 </div>
             </div>
 
@@ -154,13 +131,10 @@
             <!-- Most Popular Item -->
             <div class="col">
                 <div class="card text-center h-100 shadow-sm">
-                    <div class="card-header text-muted small">
-                        Most Popular Item
-                    </div>
+                    <div class="card-header text-muted small"> Most Popular Item</div>
                         <div class="card-body">
                             <h4 class="card-title display-6 fw-bold">
-                                Cheese Burger
-                                <!-- Will need to determine this based on calculations -->
+                                {{ popular_item }}
                             </h4>
                         </div>
                 </div>
@@ -230,58 +204,37 @@
 
 
 
-        <!-- Sales History Section -->
-
-        <h2 class="h3 mb-3 border-bottom pb-2">
-            Sales History
-        </h2>
-        
-        <div class="table-responsive shadow-sm">
-            <table class="table table-hover align-middle">
-                <thead thead class="text-white" style="background-color: crimson !important;">
-                    <tr>
-                        <!-- Table main heading -->
-                        <th scope="col">Order Number</th>
-                        <th scope="col">Items</th>
-                        <th scope="col" class="text-end">Price</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Time</th>
-                    </tr>
-                </thead>
-
-                <!-- This section will need to be pulled from the oders database based on order history -->
-                <tbody>
-                    <!-- Entry 1 -->
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Cheese Burger</td>
-                        <td class="text-end">R45.00</td>
-                        <td>11/05/25</td>
-                        <td>17:00</td>
-                    </tr>
-
-                    <!-- Entry 2 -->
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Large Chips, Chicken Wrap</td>
-                        <td class="text-end">R80.00</td>
-                        <td>11/05/25</td>
-                        <td>15:45</td>
-                    </tr>
-
-                    <!-- Entry 3 -->
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Cheese Burger</td>
-                        <td class="text-end">R45.00</td>
-                        <td>10/05/25</td>
-                        <td>12:10</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<!-- Sales History Section -->
+<!-- Table to show sales history -->
+ <h2 class="h3 mb-3 border-bottom pb-2">Sales History</h2>
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle">
+            <thead class="text-white" style="background-color: crimson !important;">
+                <tr>
+                    <th scope="col">Order Number</th>
+                    <th scope="col">Items</th>
+                    <th scope="col" class="text-end">Price</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in sales_history %}
+                <tr>
+                    <th scope="row">{{ order['order_id'] }}</th>
+                    <td>{{ order['items'] }}</td>
+                    <td class="text-end">R{{ "%.2f"|format(order['total_price']) }}</td>
+                    <td>{{ order['order_date'] }}</td>
+                    <td>{{ order['collection_time'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     </main>
+
+    {% endblock %}
 
 
     <!-- Footer Section -->

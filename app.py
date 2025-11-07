@@ -5,6 +5,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 import os
+from datetime import datetime, timedelta # For date manipulations
 
 # -----------------------------
 # Auto-create database if missing
@@ -529,6 +530,25 @@ def vendor_new_menu_item():
 
 #vendor analytics page (vendor_analytics.html)
 #===============================================================
+#definiion to get filter by date
+########################################
+def get_date_range(filter_option):
+    today = datetime.today().date()
+    if filter_option == 'daily':
+        start_date = today
+    elif filter_option == 'weekly':
+        start_date = today - timedelta(days=today.weekday())  # start of current week
+    elif filter_option == 'monthly':
+        start_date = today.replace(day=1)
+    elif filter_option == 'yearly':
+        start_date = today.replace(month=1, day=1)
+    else:
+        start_date = today
+    end_date = today
+    return start_date, end_date
+#end of date range function
+#########################################
+
 @app.route('/vendor_analytics')
 def vendor_analytics():
     if session.get('user_type') != 'vendor':
@@ -537,55 +557,72 @@ def vendor_analytics():
     vendor_id = session['vendor_id']
     conn = get_db_connection()
 
-    # 1. Completed Orders
-    completed_orders = conn.execute(
-        'SELECT COUNT(*) AS total_completed FROM "order" WHERE status="Collected" AND user_id IN (SELECT user_id FROM user)'
-    ).fetchone()['total_completed']
+    # Get filter option from query string (default: daily)
+    filter_option = request.args.get('filter', 'daily')
+    start_date, end_date = get_date_range(filter_option)
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
 
-    # 2. Revenue
-    revenue = conn.execute(
-        'SELECT SUM(price_per_item) AS total_revenue FROM orderItem WHERE vendor_id=?', (vendor_id,)
-    ).fetchone()['total_revenue'] or 0.0
-
-    # 3. Most Popular Item
-    popular_item_row = conn.execute(
-        '''
-        SELECT m.name, COUNT(*) AS quantity
-        FROM orderItem oi
-        JOIN menuItem m ON oi.menuItem_menuItem_id = m.menuItem_id
+    # --- Completed Orders ---
+    completed_orders_row = conn.execute("""
+        SELECT COUNT(DISTINCT o.order_id) AS completed_orders
+        FROM orders o
+        JOIN orderItem oi ON o.order_id = oi.orders_order_id
         WHERE oi.vendor_id = ?
-        GROUP BY m.menuItem_id
-        ORDER BY quantity DESC
-        LIMIT 1
-        ''', (vendor_id,)
-    ).fetchone()
-    most_popular_item = popular_item_row['name'] if popular_item_row else 'N/A'
+          AND o.status = 'Collected'
+          AND o.order_date BETWEEN ? AND ?
+    """, (vendor_id, start_date_str, end_date_str)).fetchone()
+    completed_orders = completed_orders_row['completed_orders'] if completed_orders_row else 0
 
-    # 4. Sales History (latest 10 orders)
-    sales_history = conn.execute(
-        '''
-        SELECT o.order_id, GROUP_CONCAT(m.name, ', ') AS items,
+    # --- Revenue ---
+    revenue_row = conn.execute("""
+        SELECT SUM(oi.price_per_item) AS revenue
+        FROM orders o
+        JOIN orderItem oi ON o.order_id = oi.orders_order_id
+        WHERE oi.vendor_id = ?
+          AND o.status = 'Collected'
+          AND o.order_date BETWEEN ? AND ?
+    """, (vendor_id, start_date_str, end_date_str)).fetchone()
+    revenue = revenue_row['revenue'] if revenue_row['revenue'] else 0
+
+    # --- Most Popular Item ---
+    popular_item_row = conn.execute("""
+        SELECT mi.name, COUNT(*) AS sold_count
+        FROM orderItem oi
+        JOIN menuItem mi ON oi.menuItem_menuItem_id = mi.menuItem_id
+        JOIN orders o ON oi.orders_order_id = o.order_id
+        WHERE oi.vendor_id = ?
+          AND o.status = 'Collected'
+          AND o.order_date BETWEEN ? AND ?
+        GROUP BY mi.name
+        ORDER BY sold_count DESC
+        LIMIT 1
+    """, (vendor_id, start_date_str, end_date_str)).fetchone()
+    popular_item = popular_item_row['name'] if popular_item_row else "N/A"
+
+    # --- Sales History ---
+    sales_history = conn.execute("""
+        SELECT o.order_id, GROUP_CONCAT(mi.name, ', ') AS items,
                SUM(oi.price_per_item) AS total_price,
                o.order_date, o.collection_time
-        FROM "order" o
+        FROM orders o
         JOIN orderItem oi ON o.order_id = oi.orders_order_id
-        JOIN menuItem m ON oi.menuItem_menuItem_id = m.menuItem_id
+        JOIN menuItem mi ON oi.menuItem_menuItem_id = mi.menuItem_id
         WHERE oi.vendor_id = ?
         GROUP BY o.order_id
         ORDER BY o.order_date DESC, o.collection_time DESC
-        LIMIT 10
-        ''', (vendor_id,)
-    ).fetchall()
+    """, (vendor_id,)).fetchall()
 
     conn.close()
 
     return render_template(
         'vendor_analytics.html',
         completed_orders=completed_orders,
-        revenue=f"{revenue:.2f}",
-        most_popular_item=most_popular_item,
-        sales_history=sales_history
-    )
+        revenue=revenue,
+        popular_item=popular_item,
+        sales_history=sales_history,
+        filter_option=filter_option
+    )   
 
 #End of vendor analytics page
 #===============================================================
