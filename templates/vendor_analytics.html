@@ -71,8 +71,8 @@
         </nav>
     </header>
 
-    {% extends "base.html" %}
-    {% block content %}
+    
+    
     <!-- Start of actual code -->
     <main class="container mt-4" role="main">
         <header class="mb-4">
@@ -227,15 +227,11 @@
                     <td>{{ order['order_date'] }}</td>
                     <td>{{ order['collection_time'] }}</td>
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
     </div>
 
     </main>
-
-    {% endblock %}
-
 
     <!-- Footer Section -->
 
