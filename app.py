@@ -302,7 +302,7 @@ def vendor_home():
     conn = get_db_connection()
     
     # 2. SQL Query to fetch, aggregate, calculate, and sort order data
-    # Joins: order <-> orderItem <-> menuItem
+    # Joins: orders <-> orderItem <-> menuItem
     sql_query = """
     SELECT 
         o.order_id, 
@@ -313,7 +313,7 @@ def vendor_home():
         -- Use GROUP_CONCAT to combine all ordered item names and their price per item 
         -- into a single string for the 'Order (Products)' column.
         GROUP_CONCAT(CAST(mI.name AS TEXT) || ' (R' || printf('%.2f', oi.price_per_item) || ')', ', ') AS order_products_summary
-    FROM "order" o
+    FROM "orders" o
     JOIN "orderItem" oi ON o.order_id = oi.order_order_id
     JOIN "menuItem" mI ON oi.menuItem_menuItem_id = mI.menuItem_id
     WHERE oi.vendor_id = ?  -- Filter to show only orders belonging to the current vendor
