@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS "orderItem" (
   "orderItem_id" INTEGER PRIMARY KEY,
   "order_order_id" INT NOT NULL,
   "menuItem_menuItem_id" INT NOT NULL,
-  "vendor_id" INT, NOT NULL,
+  "vendor_id" INT NOT NULL,
   "price_per_item" NUMERIC(10,2) NOT NULL,
   CONSTRAINT "fk_orderItem_order1"
     FOREIGN KEY ("order_order_id")
@@ -184,7 +184,7 @@ INSERT INTO "order" ("order_id", "user_id", "collection_time", "status") VALUES
 (1002, 2, '13:00', 'Submitted'),
 (1003, 3, '11:33', 'Preparing'),
 (1004, 3, '13:35', 'Ready'),
-(1005, 2, '12:20', 'Completed'),
+(1005, 2, '12:20', 'Collected'),
 (1006, 3, '11:30', 'Not Collected');
 
 -- 5. "orderItem" 
