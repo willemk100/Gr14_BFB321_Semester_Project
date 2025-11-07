@@ -152,8 +152,8 @@ END;
 -- 1. "user"
 INSERT INTO "user" ("user_id", "username", "password", "student_number", "name", "surname", "date_of_birth", "cell_number", "email", "user_type") VALUES
 (1, 'willemk100', 'p@ssword1', 'u04868260', 'Willem', 'Kleynhans', '2004-03-17', '0812345678', 'willem@uni.com', 'admin'),
-(2, 'jessM100', 'p@ssword2', 'u23232323', 'Jessica', 'Muller', '2000-11-20', '0729876543', 'jess@uni.com', 'customer'),
-(3, 'jmk200', 'p@ssword3', 'u01234566', 'Ayden', 'Bouwer', '2004-09-17', '081234567', 'AydenB@uni.com', 'customer');
+(2, 'jessM100', 'p@ssword2', 'u23232323', 'Jessica', 'Muller', '2000-11-20', '0729876543', 'jess@uni.com', 'user'),
+(3, 'jmk200', 'p@ssword3', 'u01234566', 'Ayden', 'Bouwer', '2004-09-17', '081234567', 'AydenB@uni.com', 'user');
 
 
 -- 2. "vendor"
@@ -173,7 +173,10 @@ INSERT INTO "menuItem" ("menuItem_id", "vendor_id", "category", "name", "price",
 (1009, 101, 'Tramezini', 'Chicken, Bacon & Cheese', 59.90, 39.90),
 (1010, 101, 'Burgers', 'Beef', 34.90, 26.90),
 (1011, 101, 'Burgers', 'Chicken', 34.90, 26.90),
-(1012, 101, 'Burgers', 'Rib', 34.90, 26.90);
+(1012, 101, 'Burgers', 'Rib', 34.90, 26.90)
+(1013, 101, 'Fries', 'Small', 15.00, 10.00),
+(1014, 101, 'Fries', 'Medium', 20.00, 12.00),
+(1015, 101, 'Fries', 'Large', 25.00, 15.00);
 
 -- 4. "order"
 INSERT INTO "order" ("order_id", "user_id", "status") VALUES
