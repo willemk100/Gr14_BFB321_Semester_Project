@@ -57,14 +57,14 @@
         <form action="{{ url_for('vendor_edit_menu_item', item_id=item['menuItem_id']) }}" method="POST">
 
             <div class="mb-3">
+                <label class="form-label">Category</label>
+                <input type="text" class="form-control" value="{{ item['category'] }}" readonly>
+            </div>
+            <small class="text-muted">Choose one: select an existing category or enter a new one, not both.</small>
+            <div class="mb-3">
                 <label for="itemName" class="form-label">Item Name</label>
                 <input type="text" name="name" class="form-control" id="itemName" 
                     value="{{ item['name'] }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Category</label>
-                <input type="text" class="form-control" value="{{ item['category'] }}" readonly>
             </div>
 
             <div class="mb-3">
