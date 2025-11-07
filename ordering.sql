@@ -231,7 +231,11 @@ INSERT INTO "menuItem" ("menuItem_id", "vendor_id", "category", "name", "price",
 -- 4. "order"
 INSERT INTO "order" ("order_id", "user_id", "status") VALUES
 (1001, 2, 'Collected'), 
-(1002, 2, 'Submitted');
+(1002, 2, 'Submitted'),
+(1003, 3, 'Preparing'),
+(1004, 3, 'Ready'),
+(1005, 2, 'Completed'),
+(1006, 3, 'Not Collected');
 
 -- 5. "orderItem" 
 INSERT INTO "orderItem" ("order_order_id", "menuItem_menuItem_id", "quantity", "price_per_item") VALUES
