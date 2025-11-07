@@ -61,8 +61,9 @@
             <div class="mb-3">
                 <label class="form-label">Category</label>
                 <input type="text" class="form-control" value="{{ item['category'] }}" readonly>
+                <small class="text-muted">Cannot edit category of existing items</small>
             </div>
-            <small class="text-muted">Choose one: select an existing category or enter a new one, not both.</small>
+            
             <div class="mb-3">
                 <label for="itemName" class="form-label">Item Name</label>
                 <input type="text" name="name" class="form-control" id="itemName" 
