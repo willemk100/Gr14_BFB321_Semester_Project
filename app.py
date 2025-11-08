@@ -97,6 +97,51 @@ def logout():
 
 #New Customer Registration Page (new_customer.html)
 #===========================================================
+@app.route('/add_customer', methods=['GET', 'POST'])
+def add_customer():
+    
+    if request.method == 'POST':
+
+        conn = get_db_connection()
+        #users = conn.execute('SELECT * FROM user').fetchall()
+        user_type = 'customer'
+
+
+        # Data from form
+
+        name = request.form['name']
+        surname = request.form['surname']
+        email = request.form['email']
+        cell_number = request.form['cell_number']
+        student_number = request.form['student_number']
+        date_of_birth = request.form['date_of_birth']
+        phone_number = request.form['phone_number']
+        username = request.form['username']
+        password = request.form['new_password']
+        password_confirm = request.form['confirm_password']
+
+        # Check if username already exists
+        check_existing_user = conn.execute('SELECT * FROM user WHERE username = ?', (username,)).fetchone()
+
+        if check_existing_user:
+            conn.close()
+            return render_template('new_customer.html', error1='Username already exists', form_data=request.form)
+
+        if password != password_confirm:
+            conn.close()
+            return render_template('admin_new_vendor.html', error2='Passwords do not match', form_data=request.form)
+
+         # Insert new customer into the database
+        
+        conn.execute('INSERT INTO user (username, password, student_number, name, surname, date_of_birth, cell_number, email, user_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+
+                     (username, password, student_number, name, surname, date_of_birth, cell_number, email, user_type))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('log_in'))
+
+    return render_template('new_customer.html')
 
 
 
