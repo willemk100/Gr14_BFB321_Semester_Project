@@ -20,7 +20,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="container nav">
-                    <a href="vendor_analytics.html" class="nav-link" style="color: ghostwhite;">
+                    <a href="{{ url_for('vendor_analytics', filter='daily') }}" class="nav-link" style="color: ghostwhite;">
                         <i class="bi bi-arrow-left me-1"></i>
                         Back
                     </a>
@@ -28,7 +28,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" style="color: ghostwhite;" href="vendor_main.html" aria-current="page">
+                            <a class="nav-link active" style="color: ghostwhite;" href="{{ url_for('vendor_home') }}" aria-current="page">
                                 <i class="bi bi-cup-straw me-1" aria-hidden="true"></i>
                                 Orders
                             </a>
@@ -36,7 +36,7 @@
                     </ul>
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" style="color: ghostwhite;" href="vendor_customer_menu.html" aria-current="page">
+                            <a class="nav-link active" style="color: ghostwhite;" href="{{ url_for('vendor_menu_edit') }}" aria-current="page">
                                 <i class="bi bi-file-text me-1" aria-hidden="true"></i>
                                 Edit Menu
                             </a>
