@@ -10,7 +10,7 @@
 </head>
 <body>
      <header>
-        <nav class="navbar" style="background-color: crimson;"     role="navigation" aria-label="Main navigation">
+        <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
             <div class="container">
                 <a class="navbar-brand" style="color: ghostwhite;">
                     <img src="{{ url_for('static', filename='up-logo.png') }}" alt="UPLogo" width="100" height="30" aria-hidden="true" class="d-inline-block align-text-top">  
@@ -37,40 +37,37 @@
         <header class="mb-4">
             <h1 class="h2">
                 <i class="bi me-2" aria-hidden="true"></i>
-                Browse Menus
+                Browse Vendor Menus
             </h1>
         </header>
 
         <!-- Start of the list of vendors -->
-
         <section class="mb-4" aria-labelledby="options-heading">
-        <h2 id="options-heading" class="mb-3">Our Vendors</h2>
-        
+            <h2 id="options-heading" class="mb-3">Our Vendors</h2>
+            
             {% for vendor in vendors %}
             <div class="row mb-4">
                 <div class="col-md-12">
                     <div class="card h-100">
                         <div class="row g-0">
-                            
                             <div class="col-md-5">
-                                <img src="{{ url_for('static', filename='vendor-images/' ~ vendor.vendor_id ~ '-logo.png') }}" class="img-fluid rounded-start h-100" sstyle="width: 100px; height: 100px; object-fit: cover;" alt="Logo for {{vendor.name}}">
+                                <img src="{{ url_for('static', filename='vendor-images/' ~ vendor.vendor_id ~ '-logo.png') }}"
+                                     class="img-fluid rounded-start h-100"
+                                     style="width: 100px; height: 100px; object-fit: cover;"
+                                     alt="Logo for {{ vendor.name }}">
                             </div>
                             
                             <div class="col-md-5">
                                 <div class="card-body">
                                     <h3 class="card-title">{{ vendor.name }}</h3>
-                                    <p class="spaced-paragraph"></p> 
                                     <h5 class="card-text">Tel | {{ vendor.phone_number }}</h5>
-                                    <p class="spaced-paragraph"></p> 
-                                    <h5 class="card-text">Email | {{vendor.email}}</h5>
-                                    <p class="spaced-paragraph"></p> 
+                                    <h5 class="card-text">Email | {{ vendor.email }}</h5>
                                     <h5 class="card-text"><small class="text-muted">Location | {{ vendor.location }}</small></h5>
                                 </div>
                             </div>
 
                             <div class="col-md-2 d-flex align-items-center justify-content-center border-start">
-                                <a href="{{ url_for('vendor_menu', vendor_id=vendor['vendor_id']) }}" class="btn btn-outline-primary w-75 p-3"> 
-                                    
+                                <a href="{{ url_for('vendor_menu', vendor_id=vendor.vendor_id) }}" class="btn btn-outline-primary w-75 p-3"> 
                                     <i class="bi bi-list-ul d-block mb-1" aria-hidden="true"></i>
                                     View Menu
                                 </a>
@@ -80,43 +77,31 @@
                 </div> 
             </div>
             {% endfor %}
-
-
-
-
-           <!--  {% for vendor in vendors %}
-            
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <div class="card h-100" style="width: 100%; display: flex; flex-direction: row;">
-                        <img src="images/tenz-logo.png" class="card-img-left" style="height: 300px; width: 40%; object-fit: cover;" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">{{vendor.name}}</h5>
-                            <p class="card-text">Tel | {{vendor.phone_number}} </p>
-                            <p class="card-text">Email | {{vendor.email}}</p>
-                            <p class="card-text">Location | {{vendor.location}}</p>
-                            
-                        </div>
-                         <a href="{{ url_for('vendor_menu', vendor_id=vendor['vendor_id']) }}" class="btn btn-outline-primary w-75 p-3">
-                            <i class="bi bi-list-ul" aria-hidden="true" style="text-align: center;"></i>
-                            View Menu
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %} -->
-
-            <!-- End of list of vendors-->
-
         </section>
 
-        <hr class="my-3">
-
+        <!-- Active Order Status -->
         <section class="order-status mb-4">
-            <h2 class="vendor-section-heading text-crimson">Order Status: <span id="current-status" class="badge bg-warning text-dark">Order Received</span></h2>
-            
-            <div class="card">
+            <h2 class="vendor-section-heading text-crimson">
+                Order Status:
+                {% if active_order %}
+                    <span class="badge {{ progress_class }}">{{ active_order.status }}</span>
+                {% else %}
+                    <span class="badge bg-secondary">No Active Orders</span>
+                {% endif %}
+            </h2>
+
+            {% if active_order %}
+            <div class="card mb-3">
                 <div class="card-body">
+                    <h5 class="card-title">Order #{{ active_order.order_id }}</h5>
+                    <p class="card-text"><strong>Pickup Time:</strong> {{ active_order.collection_time }}</p>
+                    <p class="card-text"><strong>Items:</strong></p>
+                    <ul>
+                        {% for item in order_items %}
+                        <li>{{ item.name }} ({{ item.category }}) - R{{ item.price_per_item }}</li>
+                        {% endfor %}
+                    </ul>
+
                     <div class="progress-labels">
                         <span class="text-start">Received</span>
                         <span class="text-center">Cooking</span>
@@ -124,26 +109,20 @@
                         <span class="text-end">Complete</span>
                     </div>
 
-                    <div class="progress mb-3" role="progressbar" aria-label="Order progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                        <div id="status-progress-bar" class="progress-bar bg-success" style="width: 25%"></div>
+                    <div class="progress mb-3" role="progressbar" aria-label="Order progress"
+                        aria-valuenow="{{ progress_value }}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar {{ progress_class }}" style="width: '{{ progress_value|default(0) }}%';"></div>
                     </div>
-                    
-                    <p class="card-text text-muted small">This is a demonstration of your order's progress.</p>
-                    
-                    <!-- <div class="mt-3">
-                        <label for="status-selector" class="form-label">Simulate Status Change:</label>
-                        <select id="status-selector" class="form-select w-auto">
-                            <option value="25" data-text="Order Received" data-color="warning" selected>Order Received</option>
-                            <option value="50" data-text="Cooking Started" data-color="primary">Cooking Started</option>
-                            <option value="75" data-text="Ready for Collection" data-color="info">Ready for Collection</option>
-                            <option value="100" data-text="Complete" data-color="success">Complete</option>
-                        </select>
-                    </div> -->
 
+                    <p class="card-text text-muted small">Your current order is being updated live.</p>
                 </div>
             </div>
+            {% else %}
+            <p class="card-text text-muted small">You have no active orders.</p>
+            {% endif %}
         </section>
 
+        <!-- Previous Order -->
         <section class="mb-4" aria-labelledby="order-status-heading">
             <h2 id="actions-heading" class="h3 mb-3 bi-clock-history"> Order History</h2>
             <div class="row custom-row">

@@ -65,7 +65,7 @@ def login():
             
 
             if user['user_type'] == 'customer':
-                return redirect(url_for('customer_home'))
+                return redirect(url_for('customer_main'))
             elif user['user_type'] == 'admin':
                 return redirect(url_for('admin_home'))
             
@@ -276,15 +276,58 @@ def edit_vendor(vendor_id):
 #***************************************************************
 #Customer home page (customer_main.html)
 #================================================================
-@app.route('/customer_home')
-def customer_home():
+@app.route('/customer_main')
+def customer_main():
     if session.get('user_type') != 'customer':
         return redirect(url_for('login'))
 
+    customer_id = session['user_id']
+
+    # Get all vendors
     conn = get_db_connection()
     vendors = conn.execute('SELECT * FROM vendor').fetchall()
+
+    # Active order (not collected)
+    active_order = conn.execute(
+        'SELECT * FROM orders WHERE user_id = ? AND status != ? ORDER BY order_date DESC LIMIT 1',
+        (customer_id, 'Collected')
+    ).fetchone()
+
+    # Order items for active order
+    order_items = []
+    progress_value = 0
+    progress_class = ''
+    if active_order:
+        order_items = conn.execute(
+            'SELECT * FROM order_items WHERE order_id = ?',
+            (active_order['order_id'],)
+        ).fetchall()
+
+        # Map order status to progress bar
+        status = active_order['status']
+        if status == 'Received':
+            progress_value = 25
+            progress_class = 'bg-warning'
+        elif status == 'Cooking':
+            progress_value = 50
+            progress_class = 'bg-primary'
+        elif status == 'Ready':
+            progress_value = 75
+            progress_class = 'bg-info'
+        elif status == 'Collected':
+            progress_value = 100
+            progress_class = 'bg-success'
+
     conn.close()
-    return render_template('customer_main.html', vendors=vendors)
+
+    return render_template(
+        'customer_main.html',
+        vendors=vendors,
+        active_order=active_order,
+        order_items=order_items,
+        progress_value=progress_value,
+        progress_class=progress_class
+    )
     
 #End of Customer home page
 #================================================================
@@ -333,7 +376,7 @@ def customer_cart():
 def customer_confirm_payment():
     if session.get('user_type') != 'customer':
         return redirect(url_for('login'))
-    customer_id = session['customer_id']
+    
 
     conn = get_db_connection()
     # Fetch all orders added to cart for display
