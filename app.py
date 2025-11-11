@@ -292,8 +292,8 @@ def customer_home():
 #Menu section (customer_menu.html)
 #================================================================
 # For view menu of [vendor]
-@app.route('/vendor/<int:vendor_id>/menu')
-def vendor_menu(vendor_id):
+@app.route('/customer_vendor/<int:vendor_id>/menu')
+def customer_vendor_menu(vendor_id):
     if session.get('user_type') != 'customer':
         return redirect(url_for('login'))
 
@@ -315,15 +315,30 @@ def vendor_menu(vendor_id):
 
 #Customer cart page (customer_cart.html)
 #================================================================
-#!! code
-
+@app.route('/customer_cart')
+def customer_cart():
+    if session.get('user_type') != 'customer':
+        return redirect(url_for('login'))
+    conn = get_db_connection()
+    # Fetch all orders added to cart for display
+    conn.close()
+    return render_template('customer_cart.html')
 
 #End of Customer cart page
 #================================================================
 
 #Confirm payment page (customer_confirm_payment.html)
 #================================================================
-#!! code
+@app.route('/customer_confirm_payment')
+def customer_confirm_payment():
+    if session.get('user_type') != 'customer':
+        return redirect(url_for('login'))
+    customer_id = session['customer_id']
+
+    conn = get_db_connection()
+    # Fetch all orders added to cart for display
+    conn.close()
+    return render_template('customer_confirm_payment.html')
 
 
 #End of Confirm payment page
