@@ -352,7 +352,7 @@ def customer_menu(vendor_id):
     selected_vendor = conn.execute('SELECT * FROM vendor WHERE vendor_id = ?', (vendor_id,)).fetchone()
     menu_items = conn.execute('SELECT * FROM menuItem WHERE vendor_id = ?', (vendor_id,)).fetchall()
     conn.close()
-    
+
     #save last vendor id in session
     session['last_vendor_id'] = vendor_id
 
@@ -398,7 +398,7 @@ def add_to_cart(item_id, vendor_id):
         })
 
     session.modified = True
-    flash(f"Added {item['name']} to cart.", "success")
+    flash(f"Added {item['name']} {item['category']} to cart.", "success")
     return redirect(url_for('customer_menu', vendor_id=vendor_id))
 #end of Add to cart function
 #################################################################
@@ -426,6 +426,22 @@ def increment_cart_item(item_id):
     session.modified = True
     return redirect(url_for('view_cart'))
 #End of Plus button function
+##########################################################
+
+#Minus button function
+##########################################################
+@app.route('/cart/decrement/<int:item_id>')
+def decrement_cart_item(item_id):
+    cart = session.get('cart', [])
+    for item in cart:
+        if item['id'] == item_id:
+            if item['quantity'] > 1:
+                item['quantity'] -= 1
+            break
+    session['cart'] = cart
+    session.modified = True
+    return redirect(url_for('view_cart'))
+#End of Minus button function
 ##########################################################
 
 #Remove item from cart function

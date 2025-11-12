@@ -43,17 +43,7 @@
         <h1 class="h2">My Cart</h1>
     </header>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
+    <!-- Star of cart table if there are items added -->
     {% if cart %}
     <table class="table table-striped mt-4">
         <thead>
@@ -68,11 +58,18 @@
         <tbody>
             {% for item in cart %}
             <tr>
+                <!--Item name and category -->
                 <td>{{ item.name }} ({{ item.category }})</td>
+                <!-- Price per item -->
                 <td>R{{ "%.2f"|format(item.price|float) }}</td>
-                <td>
-                    {{ item.quantity }}
+                <!-- Quantity with increment and decrement buttons -->
+                <td>{{ item.quantity }}
+                    <!--Plus button -->
                     <a href="{{ url_for('increment_cart_item', item_id=item.id) }}" class="btn btn-sm btn-outline-primary ms-2">+</a>
+                    <!--Add - button if more han one item -->
+                    {% if item.quantity > 1 %}
+                        <a href="{{ url_for('decrement_cart_item', item_id=item.id) }}" class="btn btn-sm btn-outline-danger ms-2"> - </a>
+                    {% endif %}
                 </td>
                 <td>R{{ "%.2f"|format(item.price|float * item.quantity|int) }}</td>
                 <td>
@@ -83,10 +80,13 @@
         </tbody>
     </table>
 
+    <!-- Total of cart -->
     <div class="d-flex justify-content-between mt-3">
         <h4>Total: R{{ "%.2f"|format(total|float) }}</h4>
         <div>
+            <!--Add to cart -->
             <a href="{{ url_for('customer_menu', vendor_id=session.get('last_vendor_id')) }}" class="btn btn-outline-primary">Add More Items</a>
+            <!-- checkout button -->
             <a href="{{ url_for('checkout') }}" class="btn btn-success">Checkout</a>
         </div>
     </div>
