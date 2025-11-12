@@ -35,141 +35,88 @@
 
 
     <!-- Start of main code -->
-    <main class="container mt-5" role="main">
-        <section class="row justify-content-center" aria-labelledby="login-heading">
-            <div class="col-md-6 col-lg-8">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <header class="text-center mb-4">
-                            <i class="bi bi-currency-dollar fs-1" aria-hidden="true"></i>
-                            <h1 id="login-heading" class="mt-3 h3">Confirmation and Payment</h1>
-                        </header>
+<main class="container mt-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-                        <!-- Requesting Pickup time -->
-                        <form>
-                            <div class="row mb-3 align-items-center">
-                                        <label for="inputPickup" class="col-md-4 col-form-label text-md-end">
-                                        Request Pickup Time
-                                    </label>
-                                    
-                                    <div class="col-md-4 col-4">
-                                        <input 
-                                                type="time" 
-                                                class="form-control" 
-                                                id="inputPickup" 
-                                                name="pickup_time" 
-                                                required
-                                                min="08:00" 
-                                                max="16:00" 
-                                                step="600"
-                                                onkeydown="return false;">
-                                            
-                                    </div>
-                                </div>
+    <div class="card shadow">
+        <div class="card-body">
+            <h3 class="text-center mb-4"><i class="bi bi-currency-dollar"></i> Confirm and Pay</h3>
 
-                             <!--Order Total from previous-->
-                            <div class="row mb-3">
-                                <label for="displayTOTAL" class="col-sm-3 col-form-label">
-                                    Order TOTAL:
-                                </label>
-                                <div class="col-auto">
-                                    <input type="text" class="form-control" id="displayTOTAL" value="R120.00" readonly>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="customer_cart.html" type="submit" class="btn btn-dark mb-3">
-                                            <i aria-hidden="true"></i>
-                                            Edit Order
-                                        </a>
-                                </div>
-
-                            </div>
-                            <fieldset class="row mb-3">
-                                <legend class="col-form-label col-auto">Pay on collection?</legend>
-                                <div class="col-auto">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                        <label class="form-check-label" for="inlineRadio1">
-                                        YES
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">
-                                        NO
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <fieldset class="row-mb-3">
-                                <legend class="col-form-label col-auto">Add Debit/Credit Card Details:</legend>
-                                <div class="col-auto">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="floatingInput" placeholder="Name">
-                                        <label for="floatingInput">First Name</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="floatingInput" placeholder="Surname">
-                                        <label for="floatingInput">Last Name</label>
-                                    </div>
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="floatingInput" placeholder="Card Number">
-                                        <label for="floatingInput">Card Number</label>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                            <fieldset class="row">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="floatingInputGrid1" placeholder="CVV">
-                                        <label for="floatingInputGrid1">CVV</label>
-                                    </div>
-                                </div>
-
-                    <!--Card Expiration Date -->
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input 
-                                type="month" 
-                                class="form-control" 
-                                id="cardExpiry" 
-                                name="card_expiry"
-                                placeholder="MM/YY"
-                                required
-                                aria-label="Card Expiration Date Month and Year"
-                                            
-                                min="2025-10" 
-                                >
-                                        <label for="cardExpiry">Expiration Date (MM/YY)</label>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-
-                            <!-- Confirm and pay Button -->
-                            <fieldset class="row mb-3">
-                                <div class="col-md">
-                                   <div class="d-grid">
-                                        <a href="customer_main.html" class="btn bi-check-circle btn-outline-success btn-lg">
-                                            <i aria-hidden="true"></i>
-                                            Confirm and Pay
-                                        </a>
-                                    </div> 
-                                </div>
-                            </fieldset>
-                                
-                            <div class="row mb-3">
-                                <!-- <div class="col-sm-10 offset-sm-2">
-                                    
-                                </div> -->
-                            </div>
-                        </form>
-
+            <form method="POST" action="{{ url_for('checkout') }}">
+                <!-- Pickup Time -->
+                <div class="mb-3 row align-items-center">
+                    <label for="pickup_time" class="col-md-4 col-form-label text-md-end">Request Pickup Time:</label>
+                    <div class="col-md-4">
+                        {% if pickup_times %}
+                            <select name="pickup_time" id="pickup_time" class="form-select" required>
+                                {% for time in pickup_times %}
+                                    <option value="{{ time }}">{{ time }}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <input type="text" class="form-control" value="No available times today" readonly>
+                        {% endif %}
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+
+                <!-- Order Total -->
+                <div class="mb-3 row align-items-center">
+                    <label class="col-md-3 col-form-label">Order TOTAL:</label>
+                    <div class="col-auto">
+                        <input type="text" class="form-control" value="R{{ '%.2f'|format(cart|sum(attribute='price')) }}" readonly>
+                    </div>
+                    <div class="col-auto">
+                        <a href="{{ url_for('view_cart') }}" class="btn btn-dark">Edit Order</a>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <fieldset class="mb-3 row">
+                    <legend class="col-form-label col-auto">Pay on collection?</legend>
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_option" id="pay_yes" value="yes" {% if pay_option == 'yes' %}checked{% endif %}>
+                            <label class="form-check-label" for="pay_yes">YES</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_option" id="pay_no" value="no" {% if pay_option == 'no' %}checked{% endif %}>
+                            <label class="form-check-label" for="pay_no">NO (Card Payment)</label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Card Details (only if NO selected) -->
+                {% if pay_option == 'no' %}
+                <div class="mb-3 row">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control mb-2" name="card_first" placeholder="First Name" required>
+                        <input type="text" class="form-control mb-2" name="card_last" placeholder="Last Name" required>
+                        <input type="text" class="form-control mb-2" name="card_number" placeholder="Card Number" required>
+                        <input type="text" class="form-control mb-2" name="card_cvv" placeholder="CVV" required>
+                        <input type="month" class="form-control" name="card_expiry" placeholder="MM/YY" required>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md">
+                        <button type="submit" class="btn btn-success btn-lg bi-check-circle"> Confirm and Pay</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
 
     <footer class="mt-5 py-4">
         <div class="container">

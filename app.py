@@ -304,7 +304,7 @@ def customer_main():
             WHERE oi.orders_order_id = ?
         """, (active_order['order_id'],)).fetchall()
 
-        # Map status to progress
+        # Map status to progress bar values
         status_map = {
             'Submitted': (25, 'bg-warning'),
             'Preparing': (50, 'bg-primary'),
@@ -460,15 +460,65 @@ def remove_from_cart(item_id):
 
 #Confirm payment page (customer_confirm_payment.html)
 #================================================================
-@app.route('/checkout')
+@app.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     cart = session.get('cart', [])
     if not cart:
         flash("Your cart is empty.", "info")
         return redirect(url_for('customer_main'))
-    return render_template('checkout.html', cart=cart)
 
+    now = datetime.now() + timedelta(minutes=30)  # earliest pickup 30 min from now
+    business_start = 8  # 08:00
+    business_end = 16  # 16:00 last collection
 
+    pickup_times = []
+
+    # Check if current time is after business hours
+    if now.hour >= business_end:
+        flash("The vendor is closed for today. You can order tomorrow from 08:00.", "info")
+        # set earliest pickup tomorrow 08:00
+        now = datetime.combine(datetime.today() + timedelta(days=1), datetime.min.time()) + timedelta(hours=business_start)
+
+    # Generate pickup times in 10 min increments
+    while now.hour < business_end:
+        pickup_times.append(now.strftime("%H:%M"))
+        now += timedelta(minutes=10)
+
+    if request.method == 'POST':
+        collection_time = request.form.get('pickup_time')
+        pay_option = request.form.get('pay_option')
+        card_first = request.form.get('card_first')
+        card_last = request.form.get('card_last')
+        card_number = request.form.get('card_number')
+        card_cvv = request.form.get('card_cvv')
+        card_expiry = request.form.get('card_expiry')
+
+        # Server-side validation for card details
+        if pay_option == "no":
+            if not all([card_first, card_last, card_number, card_cvv, card_expiry]):
+                flash("Please fill in all card details.", "danger")
+                return render_template('customer_confirm_payment.html', cart=cart, pickup_times=pickup_times, pay_option=pay_option)
+
+        # Add order to database
+        conn = get_db_connection()
+        user_id = session.get('user_id')
+        cur = conn.execute("INSERT INTO orders (user_id, collection_time) VALUES (?, ?)", (user_id, collection_time))
+        order_id = cur.lastrowid
+
+        for item in cart:
+            conn.execute(
+                "INSERT INTO orderItem (orders_order_id, menuItem_menuItem_id, vendor_id, price_per_item) VALUES (?, ?, ?, ?)",
+                (order_id, item['id'], item['vendor_id'], item['price'])
+            )
+        conn.commit()
+        conn.close()
+
+        # Clear cart
+        session.pop('cart', None)
+        flash("Order successfully placed!", "success")
+        return redirect(url_for('customer_main'))
+
+    return render_template('customer_confirm_payment.html', cart=cart, pickup_times=pickup_times, pay_option="yes")
 #End of Confirm payment page
 #================================================================
 #End of CUSTOMER SECTION!!!
