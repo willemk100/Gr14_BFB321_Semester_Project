@@ -360,35 +360,93 @@ def customer_menu(vendor_id):
 
     categories = sorted({item['category'] for item in menu_items})
     return render_template('customer_menu.html', menu_items=menu_items, selected_vendor=selected_vendor, categories = categories)
-#End of Menu section
+
+#Add to cart function
+#################################################################
+@app.route('/add_to_cart/<int:item_id>/<int:vendor_id>')
+def add_to_cart(item_id, vendor_id):
+    if 'cart' not in session:
+        session['cart'] = []
+
+    conn = get_db_connection()
+    item = conn.execute(
+        "SELECT menuItem_id, name, category, price, vendor_id FROM menuItem WHERE menuItem_id = ?", (item_id,)
+    ).fetchone()
+    conn.close()
+
+    if not item:
+        flash("Item not found.", "danger")
+        return redirect(url_for('customer_menu', vendor_id=vendor_id))
+
+    # Check if item is already in cart
+    for cart_item in session['cart']:
+        if cart_item['id'] == item['menuItem_id']:
+            cart_item['quantity'] += 1
+            break
+    else:
+        session['cart'].append({
+            'id': item['menuItem_id'],
+            'name': item['name'],
+            'category': item['category'],
+            'price': float(item['price']),
+            'quantity': 1,
+            'vendor_id': item['vendor_id']
+        })
+
+    session.modified = True
+    flash(f"Added {item['name']} to cart.", "success")
+    return redirect(url_for('customer_menu', vendor_id=vendor_id))
+#end of Add to cart function
+#################################################################
+#End of Customer Menu section
 #================================================================
 
 #Customer cart page (customer_cart.html)
 #================================================================
-@app.route('/customer_cart')
-def customer_cart():
-    if session.get('user_type') != 'customer':
-        return redirect(url_for('login'))
-    conn = get_db_connection()
-    # Fetch all orders added to cart for display
-    conn.close()
-    return render_template('customer_cart.html')
+@app.route('/cart')
+def view_cart():
+    cart = session.get('cart', [])
+    total = sum(item['price'] * item['quantity'] for item in cart)
+    return render_template('cart.html', cart=cart, total=total)
 
+#Plus button function
+##########################################################
+@app.route('/cart/increment/<int:item_id>')
+def increment_cart_item(item_id):
+    cart = session.get('cart', [])
+    for item in cart:
+        if item['id'] == item_id:
+            item['quantity'] += 1
+            break
+    session['cart'] = cart
+    session.modified = True
+    return redirect(url_for('view_cart'))
+#End of Plus button function
+##########################################################
+
+#Remove item from cart function
+#########################################################
+@app.route('/remove_from_cart/<int:item_id>')
+def remove_from_cart(item_id):
+    cart = session.get('cart', [])
+    cart = [item for item in cart if item['id'] != item_id]
+    session['cart'] = cart
+    session.modified = True
+    return redirect(url_for('view_cart'))
+#End of Remove item from cart function
+##########################################################
 #End of Customer cart page
 #================================================================
 
 #Confirm payment page (customer_confirm_payment.html)
 #================================================================
-@app.route('/customer_confirm_payment')
-def customer_confirm_payment():
-    if session.get('user_type') != 'customer':
-        return redirect(url_for('login'))
-    
-
-    conn = get_db_connection()
-    # Fetch all orders added to cart for display
-    conn.close()
-    return render_template('customer_confirm_payment.html')
+@app.route('/checkout')
+def checkout():
+    cart = session.get('cart', [])
+    if not cart:
+        flash("Your cart is empty.", "info")
+        return redirect(url_for('customer_main'))
+    return render_template('checkout.html', cart=cart)
 
 
 #End of Confirm payment page
