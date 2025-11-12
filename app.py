@@ -887,12 +887,14 @@ def vendor_analytics_ABC():
         return redirect(url_for('login'))
 
     vendor_id = session['vendor_id']
-    timeframe = request.args.get('timeframe', 'daily')
+    # timeframe can be 'monthly' or 'yearly' (or 'daily','weekly' if you want to keep)
+    timeframe = request.args.get('timeframe', 'monthly')  # default monthly view
+    # metric: 'Orders' -> units_sold, 'Cost' -> total_cost, 'Profit' -> total_profit
     metric = request.args.get('metric', 'Profit')
 
     conn = get_db_connection()
 
-    #Fetch MIN and MAX order dates dynamically for this vendor
+    # Get dynamic min/max dates for vendor
     date_row = conn.execute("""
         SELECT 
             MIN(DATE(o.order_date)) AS min_date, 
@@ -904,18 +906,20 @@ def vendor_analytics_ABC():
 
     if not date_row or not date_row['min_date'] or not date_row['max_date']:
         conn.close()
-        return render_template("vendor_analytics_ABC.html", image_data=None, data=[])
+        return render_template("vendor_analytics_ABC.html", image_data=None, data=[], metric=metric, timeframe=timeframe)
 
     db_min_date = date.fromisoformat(date_row['min_date'])
     db_max_date = date.fromisoformat(date_row['max_date'])
 
-    #Compute timeframe range using database max_date instead of today's date
+    # Compute start_date/end_date based on timeframe using DB max date
     if timeframe == 'daily':
         start_date = db_max_date
     elif timeframe == 'weekly':
         start_date = db_max_date - timedelta(days=6)
     elif timeframe == 'monthly':
-        start_date = db_max_date.replace(day=1)
+        # singular monthly data: first day of the month of max_date
+        prev_month = (db_max_date.replace(day=1) - timedelta(days=1)).replace(day=1)
+        start_date = prev_month
     elif timeframe == 'yearly':
         start_date = db_max_date.replace(month=1, day=1)
     else:
@@ -923,10 +927,12 @@ def vendor_analytics_ABC():
 
     end_date = db_max_date
 
-    #Query category data within the dynamic range
+    # Query per menu item (so we can label like "Burgers (Beef)")
     query = """
     SELECT
+        mi.menuItem_id AS menu_item_id,
         mi.category AS category,
+        mi.name AS item_name,
         COUNT(*) AS units_sold,
         SUM(oi.price_per_item) AS total_revenue,
         SUM(mi.cost) AS total_cost,
@@ -936,66 +942,103 @@ def vendor_analytics_ABC():
     JOIN menuItem mi ON oi.menuItem_menuItem_id = mi.menuItem_id
     WHERE oi.vendor_id = ?
       AND DATE(o.order_date) BETWEEN DATE(?) AND DATE(?)
-    GROUP BY mi.category
+    GROUP BY mi.menuItem_id, mi.category, mi.name
     """
 
     rows = conn.execute(query, (vendor_id, start_date.isoformat(), end_date.isoformat())).fetchall()
     conn.close()
 
-    #Transform SQL data into a list of dicts
-    data = [{
-        'category': r['category'],
-        'units_sold': r['units_sold'],
-        'total_cost': r['total_cost'],
-        'total_profit': r['total_profit']
-    } for r in rows]
+    # Build data list with nice label e.g. "Burgers (Beef)"
+    data = []
+    for r in rows:
+        label = f"{r['category']} ({r['item_name']})"
+        data.append({
+            'menu_item_id': r['menu_item_id'],
+            'label': label,
+            'category': r['category'],
+            'item_name': r['item_name'],
+            'units_sold': int(r['units_sold'] or 0),
+            'total_revenue': float(r['total_revenue'] or 0.0),
+            'total_cost': float(r['total_cost'] or 0.0),
+            'total_profit': float(r['total_profit'] or 0.0)
+        })
 
-    #Determine which metric to plot
+    # Which metric we use for ranking/classification
     metric_key = 'units_sold' if metric == 'Orders' else \
                  'total_cost' if metric == 'Cost' else 'total_profit'
 
-    #Sort by selected metric
+    # Sort descending by metric
     data.sort(key=lambda x: x[metric_key], reverse=True)
 
-    #Compute cumulative percentages for Pareto chart
+    # Compute cumulative percentages on chosen metric
     values = [d[metric_key] for d in data]
-    total = sum(values) or 1
-    cum_percent = []
-    cum_sum = 0
-    for v in values:
+    total_value = sum(values) or 1.0
+    cum_sum = 0.0
+    for d, v in zip(data, values):
         cum_sum += v
-        cum_percent.append(cum_sum / total * 100)
+        d['cum_value'] = cum_sum
+        d['cum_percent'] = (cum_sum / total_value) * 100.0
 
-    #Generate Pareto Chart
-    fig, ax1 = plt.subplots(figsize=(6, 4))
-    ax1.bar([d['category'] for d in data], values, color='lightcoral')
-    ax1.set_ylabel(metric)
-    ax1.set_xlabel('Category')
-    plt.xticks(rotation=45, ha='right')
+    # Assign ABC class (common thresholds: A = top 70%, B = next 20% (70-90), C = remaining)
+    for d in data:
+        cp = d['cum_percent']
+        if cp <= 70.0:
+            d['abc_class'] = 'A'
+        elif cp <= 90.0:
+            d['abc_class'] = 'B'
+        else:
+            d['abc_class'] = 'C'
 
-    #Secondary axis for cumulative percentage
-    ax2 = ax1.twinx()
-    ax2.plot([d['category'] for d in data], cum_percent, color='black', marker='o')
-    ax2.set_ylabel('Cumulative %')
-    ax2.set_ylim(0, 110)
+    # Prepare plotting: bar chart of metric per item, colored by ABC class
+    import matplotlib.pyplot as plt
+    import io, base64
 
-    #Title shows timeframe and actual date range from DB
-    plt.title(f'Pareto Chart by {metric} ({timeframe.capitalize()}: {start_date} to {end_date})')
+    labels = [d['label'] for d in data]
+    plot_values = [d[metric_key] for d in data]
+    classes = [d['abc_class'] for d in data]
+
+    # Choose colors by class
+    color_map = {'A': 'tab:green', 'B': 'tab:orange', 'C': 'tab:gray'}
+    colors = [color_map[c] for c in classes]
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    bars = ax.bar(range(len(labels)), plot_values, color=colors)
+    ax.set_xticks(range(len(labels)))
+    ax.set_xticklabels(labels, rotation=45, ha='right')
+    ax.set_ylabel(metric)
+    ax.set_xlabel('Menu Item (Category (Name))')
+    ax.set_title(f'ABC Classification by {metric} ({timeframe.capitalize()}: {start_date} to {end_date})')
     plt.tight_layout()
 
-    #Convert chart to Base64 for embedding in HTML
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+    # Add small legend manually
+    from matplotlib.patches import Patch
+    legend_elements = [Patch(facecolor=color_map['A'], label='A (Top 70%)'),
+                       Patch(facecolor=color_map['B'], label='B (70-90%)'),
+                       Patch(facecolor=color_map['C'], label='C (Bottom 10%)')]
+    ax.legend(handles=legend_elements, loc='upper right')
+
+    # Add cumulative percent line (optional) on secondary axis
+    ax2 = ax.twinx()
+    cum_percents = [d['cum_percent'] for d in data]
+    ax2.plot(range(len(labels)), cum_percents, color='black', marker='o', linewidth=1)
+    ax2.set_ylim(0, 110)
+    ax2.set_ylabel('Cumulative %')
+
+    # Save figure to base64
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
     plt.close(fig)
 
-    #Render template with chart and data
+    # Send data to template (so template can show table or legend if desired)
     return render_template('vendor_analytics_ABC.html',
                            image_data=image_base64,
                            data=data,
                            metric=metric,
-                           timeframe=timeframe)
+                           timeframe=timeframe,
+                           start_date=start_date,
+                           end_date=end_date)
 
 
 
