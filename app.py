@@ -753,21 +753,6 @@ def vendor_analytics():
 
 #vendor analytics ABC page (vendor_analytics_ABC.html)
 #===============================================================
-def compute_date_range(timeframe):
-    today = date.today()
-    if timeframe == 'daily':
-        start = today
-    elif timeframe == 'weekly':
-        start = today - timedelta(days=6)
-    elif timeframe == 'monthly':
-        start = today.replace(day=1)
-    elif timeframe == 'yearly':
-        start = today.replace(month=1, day=1)
-    else:
-        start = date(1970,1,1)
-    end = today
-    return start.isoformat(), end.isoformat()
-
 @app.route('/vendor_analytics_ABC', methods=['GET'])
 def vendor_analytics_ABC():
     if session.get('user_type') != 'vendor':
@@ -775,13 +760,42 @@ def vendor_analytics_ABC():
 
     vendor_id = session['vendor_id']
     timeframe = request.args.get('timeframe', 'daily')
-    metric = request.args.get('metric', 'Profit')  # Profit, Cost, Orders
+    metric = request.args.get('metric', 'Profit')
 
-    start_date, end_date = compute_date_range(timeframe)
-    
-    # Use your existing database connection function
     conn = get_db_connection()
 
+    #Fetch MIN and MAX order dates dynamically for this vendor
+    date_row = conn.execute("""
+        SELECT 
+            MIN(DATE(o.order_date)) AS min_date, 
+            MAX(DATE(o.order_date)) AS max_date
+        FROM orders o
+        JOIN orderItem oi ON o.order_id = oi.orders_order_id
+        WHERE oi.vendor_id = ?
+    """, (vendor_id,)).fetchone()
+
+    if not date_row or not date_row['min_date'] or not date_row['max_date']:
+        conn.close()
+        return render_template("vendor_analytics_ABC.html", image_data=None, data=[])
+
+    db_min_date = date.fromisoformat(date_row['min_date'])
+    db_max_date = date.fromisoformat(date_row['max_date'])
+
+    #Compute timeframe range using database max_date instead of today's date
+    if timeframe == 'daily':
+        start_date = db_max_date
+    elif timeframe == 'weekly':
+        start_date = db_max_date - timedelta(days=6)
+    elif timeframe == 'monthly':
+        start_date = db_max_date.replace(day=1)
+    elif timeframe == 'yearly':
+        start_date = db_max_date.replace(month=1, day=1)
+    else:
+        start_date = db_min_date
+
+    end_date = db_max_date
+
+    #Query category data within the dynamic range
     query = """
     SELECT
         mi.category AS category,
@@ -793,16 +807,14 @@ def vendor_analytics_ABC():
     JOIN orders o ON oi.orders_order_id = o.order_id
     JOIN menuItem mi ON oi.menuItem_menuItem_id = mi.menuItem_id
     WHERE oi.vendor_id = ?
-      AND date(o.order_date) BETWEEN date(?) AND date(?)
+      AND DATE(o.order_date) BETWEEN DATE(?) AND DATE(?)
     GROUP BY mi.category
     """
-    rows = conn.execute(query, (vendor_id, start_date, end_date)).fetchall()
-    conn.close()  # Close after fetching
 
-    if not rows:
-        return render_template("vendor_analytics_ABC.html", image_data=None, data=[])
+    rows = conn.execute(query, (vendor_id, start_date.isoformat(), end_date.isoformat())).fetchall()
+    conn.close()
 
-    # Transform data
+    #Transform SQL data into a list of dicts
     data = [{
         'category': r['category'],
         'units_sold': r['units_sold'],
@@ -810,14 +822,14 @@ def vendor_analytics_ABC():
         'total_profit': r['total_profit']
     } for r in rows]
 
-    # Determine metric key
+    #Determine which metric to plot
     metric_key = 'units_sold' if metric == 'Orders' else \
                  'total_cost' if metric == 'Cost' else 'total_profit'
 
-    # Sort by metric
+    #Sort by selected metric
     data.sort(key=lambda x: x[metric_key], reverse=True)
 
-    # Compute cumulative percentage
+    #Compute cumulative percentages for Pareto chart
     values = [d[metric_key] for d in data]
     total = sum(values) or 1
     cum_percent = []
@@ -826,35 +838,37 @@ def vendor_analytics_ABC():
         cum_sum += v
         cum_percent.append(cum_sum / total * 100)
 
-    # Create Pareto chart using matplotlib
+    #Generate Pareto Chart
     fig, ax1 = plt.subplots(figsize=(6, 4))
     ax1.bar([d['category'] for d in data], values, color='lightcoral')
     ax1.set_ylabel(metric)
     ax1.set_xlabel('Category')
     plt.xticks(rotation=45, ha='right')
 
+    #Secondary axis for cumulative percentage
     ax2 = ax1.twinx()
     ax2.plot([d['category'] for d in data], cum_percent, color='black', marker='o')
     ax2.set_ylabel('Cumulative %')
     ax2.set_ylim(0, 110)
 
-    plt.title(f'Pareto Chart by {metric} ({timeframe.capitalize()})')
+    #Title shows timeframe and actual date range from DB
+    plt.title(f'Pareto Chart by {metric} ({timeframe.capitalize()}: {start_date} to {end_date})')
     plt.tight_layout()
 
-    # Convert plot to base64 string
+    #Convert chart to Base64 for embedding in HTML
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
     plt.close(fig)
 
-    
-
+    #Render template with chart and data
     return render_template('vendor_analytics_ABC.html',
                            image_data=image_base64,
                            data=data,
                            metric=metric,
                            timeframe=timeframe)
+
 
 
 #End of vendor analytics ABC page
