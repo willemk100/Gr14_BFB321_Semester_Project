@@ -235,7 +235,6 @@ def add_vendor():
 #End of Add vendor page
 #===============================================================
 
-
 #Edit vendor details page
 #===============================================================
 @app.route('/admin_home/edit_vendor/<int:vendor_id>', methods=['GET', 'POST'])
