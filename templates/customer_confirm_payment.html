@@ -54,14 +54,52 @@
       {% endif %}
     {% endwith %}
 
-    <div class="card shadow">
+    <div class="card shadow mb-4">
         <div class="card-body">
             <h3 class="text-center mb-4"><i class="bi bi-currency-dollar"></i> Confirm and Pay</h3>
+
+            <!-- Order Table -->
+            <h5>Your Order</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set total = 0 %}
+                    {% for item in cart %}
+                        {% set subtotal = item.price * item.quantity %}
+                        {% set total = total + subtotal %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>R{{ '%.2f'|format(item.price) }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>R{{ '%.2f'|format(subtotal|float) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4" class="text-end">TOTAL:</th>
+                        <th>R{{ '%.2f'|format(total|float) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="mb-4">
+                <a href="{{ url_for('view_cart') }}" class="btn btn-dark"><i class="bi bi-pencil-square"></i> Edit Order</a>
+            </div>
 
             <form method="POST" action="{{ url_for('checkout') }}">
                 <!-- Pickup Time -->
                 <div class="mb-3 row align-items-center">
-                    <label for="pickup_time" class="col-md-4 col-form-label text-md-end">Request Pickup Time:</label>
+                    <label for="pickup_time" class="col-md-4 col-form-label text-md-end">Pickup Time:</label>
                     <div class="col-md-4">
                         {% if pickup_times %}
                             <select name="pickup_time" id="pickup_time" class="form-select" required>
@@ -75,52 +113,50 @@
                     </div>
                 </div>
 
-                <!-- Order Total -->
-                <div class="mb-3 row align-items-center">
-                    <label class="col-md-3 col-form-label">Order TOTAL:</label>
-                    <div class="col-auto">
-                        <input type="text" class="form-control" value="R{{ '%.2f'|format(cart|sum(attribute='price')) }}" readonly>
+                {% if not pickup_times %}
+                    <div class="alert alert-warning text-center">
+                        Orders cannot be placed at this time. Please come back during business hours.
                     </div>
-                    <div class="col-auto">
-                        <a href="{{ url_for('view_cart') }}" class="btn btn-dark">Edit Order</a>
+                {% endif %}
+
+                <!-- Payment Method -->
+                <div class="mb-3">
+                    <h2 class="mb-2">Payment Method</h2>
+                    <div class="btn-group" role="group" aria-label="Payment options">
+                        <!-- Cash on Collection -->
+                        <input type="radio" class="btn-check" name="pay_option" id="pay_cash" value="cash" autocomplete="off"
+                            {% if pay_option == 'cash' %}checked{% endif %}>
+                        <label class="btn btn-outline-primary" for="pay_cash" {% if not pickup_times %}disabled{% endif %}>
+                            Pay on Collection
+                        </label>
+
+                        <!-- Online Payment -->
+                        <input type="radio" class="btn-check" name="pay_option" id="pay_online" value="online" autocomplete="off"
+                            {% if pay_option == 'online' %}checked{% endif %}>
+                        <label class="btn btn-outline-primary" for="pay_online" {% if not pickup_times %}disabled{% endif %}>
+                            Online Payment
+                        </label>
                     </div>
                 </div>
 
-                <!-- Payment Method -->
-                <fieldset class="mb-3 row">
-                    <legend class="col-form-label col-auto">Pay on collection?</legend>
-                    <div class="col-auto">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="pay_option" id="pay_yes" value="yes" {% if pay_option == 'yes' %}checked{% endif %}>
-                            <label class="form-check-label" for="pay_yes">YES</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="pay_option" id="pay_no" value="no" {% if pay_option == 'no' %}checked{% endif %}>
-                            <label class="form-check-label" for="pay_no">NO (Card Payment)</label>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <!-- Card Details (only if NO selected) -->
-                {% if pay_option == 'no' %}
-                <div class="mb-3 row">
-                    <div class="col-md-6">
-                        <input type="text" class="form-control mb-2" name="card_first" placeholder="First Name" required>
-                        <input type="text" class="form-control mb-2" name="card_last" placeholder="Last Name" required>
-                        <input type="text" class="form-control mb-2" name="card_number" placeholder="Card Number" required>
-                        <input type="text" class="form-control mb-2" name="card_cvv" placeholder="CVV" required>
-                        <input type="month" class="form-control" name="card_expiry" placeholder="MM/YY" required>
-                    </div>
+                <!-- Card Details (only shown if Online selected) -->
+                {% if pay_option == 'online' %}
+                <div class="card p-3 mb-3">
+                    <h5>Card Details</h5>
+                    <input type="text" class="form-control mb-2" name="card_first" placeholder="First Name" required>
+                    <input type="text" class="form-control mb-2" name="card_last" placeholder="Last Name" required>
+                    <input type="text" class="form-control mb-2" name="card_number" placeholder="Card Number" required>
+                    <input type="text" class="form-control mb-2" name="card_cvv" placeholder="CVV" required>
+                    <input type="month" class="form-control" name="card_expiry" placeholder="MM/YY" required>
                 </div>
                 {% endif %}
 
-                <div class="row">
-                    <div class="col-md">
-                        <button type="submit" class="btn btn-success btn-lg bi-check-circle"> Confirm and Pay</button>
-                    </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-lg btn-primary" {% if not pickup_times %}disabled{% endif %}>
+                        <i class="bi bi-check-circle"></i> Confirm and Pay
+                    </button>
                 </div>
             </form>
-
         </div>
     </div>
 </main>
