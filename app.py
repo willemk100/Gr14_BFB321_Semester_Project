@@ -273,6 +273,17 @@ def edit_vendor(vendor_id):
 
 #CUSTOMER SECTION!!!
 #***************************************************************
+
+# Standard operating hours
+STANDARD_OPEN = time(8, 0)   # 08:00
+STANDARD_CLOSE = time(16, 0) # 16:00
+
+def is_open_now():
+    """Returns True if current time is within standard operating hours."""
+    now = datetime.now().time()
+    return STANDARD_OPEN <= now <= STANDARD_CLOSE
+
+
 #Customer home page (customer_main.html)
 #================================================================
 @app.route('/customer_main')
@@ -286,23 +297,18 @@ def customer_main():
     # Get all vendors
     vendors = conn.execute("SELECT * FROM vendor").fetchall()
 
-    # Business hours for vendors (you can also store per vendor in DB)
-    opening = time(8, 0)
-    closing = time(16, 0)
     now = datetime.now().time()
-
     vendors_with_status = []
     for vendor in vendors:
         vendor_dict = dict(vendor)
-        if opening <= now <= closing:
-            vendor_dict['status_text'] = f"Open — Closes at {closing.strftime('%H:%M')}"
+        if is_open_now():
+            vendor_dict['status_text'] = f"Open — Closes at {STANDARD_CLOSE.strftime('%H:%M')}"
             vendor_dict['status_class'] = 'bg-success'
         else:
-            # If before opening, show today opening; if after closing, next day
-            if now < opening:
-                vendor_dict['status_text'] = f"Closed — Opens at {opening.strftime('%H:%M')}"
+            if now < STANDARD_OPEN:
+                vendor_dict['status_text'] = f"Closed — Opens at {STANDARD_OPEN.strftime('%H:%M')}"
             else:
-                vendor_dict['status_text'] = f"Closed — Opens at {opening.strftime('%H:%M')} tomorrow"
+                vendor_dict['status_text'] = f"Closed — Opens at {STANDARD_OPEN.strftime('%H:%M')} tomorrow"
             vendor_dict['status_class'] = 'bg-danger'
         vendors_with_status.append(vendor_dict)
 
@@ -482,82 +488,71 @@ def remove_from_cart(item_id):
 
 #Confirm payment page (customer_confirm_payment.html)
 #================================================================
-@app.route('/checkout', methods=['GET', 'POST'])
-def checkout():
+def generate_pickup_times():
+    """Generate 30-min interval pickup times within operating hours."""
+    now = datetime.now()
+    if not is_open_now():
+        return []  # no times outside operating hours
+
+    times = []
+    current_time = datetime.combine(now.date(), STANDARD_OPEN)
+    end_time = datetime.combine(now.date(), STANDARD_CLOSE)
+
+    while current_time.time() <= STANDARD_CLOSE:
+        if current_time.time() > now.time():
+            times.append(current_time.strftime("%H:%M"))
+        current_time += timedelta(minutes=30)
+    
+    return times
+
+@app.route('/confirm_payment', methods=['GET', 'POST'])
+def confirm_payment():
     cart = session.get('cart', [])
     if not cart:
         flash("Your cart is empty.", "info")
         return redirect(url_for('customer_main'))
 
-    # Earliest pickup 30 min from now
-    now = datetime.now() + timedelta(minutes=30)
-    business_start = 8
-    business_end = 16
-
-    # If after business hours, start tomorrow at 08:00
-    if now.hour >= business_end:
-        flash("The vendor is closed for today. You can order tomorrow from 08:00.", "info")
-        now = datetime.combine(datetime.today() + timedelta(days=1), datetime.min.time()) + timedelta(hours=business_start)
-
-    # Generate pickup times in 10-min increments
-    pickup_times = []
-    temp_time = now
-    while temp_time.hour < business_end:
-        pickup_times.append(temp_time.strftime("%H:%M"))
-        temp_time += timedelta(minutes=10)
-
-    # Default pay option
-    pay_option = "yes"
+    pickup_times = generate_pickup_times()
+    pay_option = request.form.get('pay_option', 'cash')
 
     if request.method == 'POST':
-        collection_time = request.form.get('pickup_time')
-        pay_option = request.form.get('pay_option', 'yes')
+        pickup_time_str = request.form.get('pickup_time')
+        pay_option = request.form.get('pay_option', 'cash')
+        payment_method = 'online' if pay_option == 'online' else 'cash'
+        payment_status = 'paid' if pay_option == 'online' else 'unpaid'
 
-        # Validate card details only if NO selected
-        if pay_option == "no":
-            card_first = request.form.get('card_first')
-            card_last = request.form.get('card_last')
-            card_number = request.form.get('card_number')
-            card_cvv = request.form.get('card_cvv')
-            card_expiry = request.form.get('card_expiry')
-
-            if not all([card_first, card_last, card_number, card_cvv, card_expiry]):
-                flash("Please fill in all card details.", "danger")
-                return render_template(
-                    'customer_confirm_payment.html',
-                    cart=cart,
-                    pickup_times=pickup_times,
-                    pay_option=pay_option
-                )
-
-        # Save order
         conn = get_db_connection()
-        user_id = session.get('user_id')
-        cur = conn.execute(
-            "INSERT INTO orders (user_id, collection_time) VALUES (?, ?)",
-            (user_id, collection_time)
-        )
+        cur = conn.cursor()
+
+        # Vendor from first cart item
+        vendor_id = cart[0]['vendor_id']
+
+        cur.execute("""
+            INSERT INTO orders (user_id, collection_time, status, payment_method, payment_status, created_at, updated_at)
+            VALUES (?, ?, 'Submitted', ?, ?, ?, ?)
+        """, (
+            session.get('user_id'),
+            pickup_time_str,
+            payment_method,
+            payment_status,
+            datetime.now(),
+            datetime.now()
+        ))
         order_id = cur.lastrowid
 
         for item in cart:
-            conn.execute(
-                "INSERT INTO orderItem (orders_order_id, menuItem_menuItem_id, vendor_id, price_per_item) VALUES (?, ?, ?, ?)",
-                (order_id, item['id'], item['vendor_id'], item['price'])
-            )
+            cur.execute("""
+                INSERT INTO orderItem (orders_order_id, menuItem_menuItem_id, vendor_id, price_per_item)
+                VALUES (?, ?, ?, ?)
+            """, (order_id, item['id'], vendor_id, item['price']))
 
         conn.commit()
         conn.close()
-
         session.pop('cart', None)
-        flash("Order successfully placed!", "success")
+        flash("Order confirmed!", "success")
         return redirect(url_for('customer_main'))
 
-    return render_template(
-        'customer_confirm_payment.html',
-        cart=cart,
-        pickup_times=pickup_times,
-        pay_option=pay_option
-    )
+    return render_template('customer_confirm_payment.html', cart=cart, pickup_times=pickup_times, pay_option=pay_option)
 #End of Confirm payment page
 #================================================================
 #End of CUSTOMER SECTION!!!
