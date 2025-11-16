@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for, g, session
 import sqlite3
 import io, base64
 import os
-from datetime import datetime, timedelta, date # For date manipulations
+from datetime import datetime, timedelta, date, time # For date manipulations
 import matplotlib.pyplot as plt
 
 # -----------------------------
@@ -286,7 +286,27 @@ def customer_main():
     # Get all vendors
     vendors = conn.execute("SELECT * FROM vendor").fetchall()
 
-    # Get active order (uncollected)
+    # Business hours for vendors (you can also store per vendor in DB)
+    opening = time(8, 0)
+    closing = time(16, 0)
+    now = datetime.now().time()
+
+    vendors_with_status = []
+    for vendor in vendors:
+        vendor_dict = dict(vendor)
+        if opening <= now <= closing:
+            vendor_dict['status_text'] = f"Open — Closes at {closing.strftime('%H:%M')}"
+            vendor_dict['status_class'] = 'bg-success'
+        else:
+            # If before opening, show today opening; if after closing, next day
+            if now < opening:
+                vendor_dict['status_text'] = f"Closed — Opens at {opening.strftime('%H:%M')}"
+            else:
+                vendor_dict['status_text'] = f"Closed — Opens at {opening.strftime('%H:%M')} tomorrow"
+            vendor_dict['status_class'] = 'bg-danger'
+        vendors_with_status.append(vendor_dict)
+
+    # Get active order
     active_order = conn.execute("""
         SELECT * FROM orders 
         WHERE user_id = ? AND status != 'Collected' 
@@ -303,7 +323,6 @@ def customer_main():
             WHERE oi.orders_order_id = ?
         """, (active_order['order_id'],)).fetchall()
 
-        # Map status to progress bar values
         status_map = {
             'Submitted': (25, 'bg-warning'),
             'Preparing': (50, 'bg-primary'),
@@ -314,7 +333,6 @@ def customer_main():
     else:
         progress_value, progress_class = 0, 'bg-secondary'
 
-    # Get last collected order
     last_collected_order = conn.execute("""
         SELECT * FROM orders 
         WHERE user_id = ? AND status = 'Collected'
@@ -326,14 +344,13 @@ def customer_main():
 
     return render_template(
         'customer_main.html',
-        vendors=vendors,
+        vendors=vendors_with_status,
         active_order=active_order,
         order_items=order_items,
         progress_value=progress_value,
         progress_class=progress_class,
         last_collected_order=last_collected_order
     )
-
     
 #End of Customer home page
 #================================================================
@@ -354,6 +371,12 @@ def customer_menu(vendor_id):
 
     #save last vendor id in session
     session['last_vendor_id'] = vendor_id
+
+     # Business hours check (08:00 - 16:00)
+    now = datetime.now().time()
+    opening = time(8, 0)
+    closing = time(16, 0)
+    vendor_closed = not (opening <= now <= closing)
 
     menu_items = [dict(item) for item in menu_items]
 
