@@ -21,7 +21,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="container nav">
-                    <a href="customer_main.html" class="nav-link" style="color: ghostwhite;">
+                    <a href="{{ url_for('customer_main') }}" class="nav-link" style="color: ghostwhite;">
                         <i class="bi bi-arrow-left me-1"></i>
                         Back
                     </a>
@@ -42,12 +42,23 @@
     </header>
 
     <main class="container vendor-page mt-4">
-    <!-- Vendor Info -->
+    
+     <!-- Vendor Info -->
     <section class="vendor-info">
         <h2 class="vendor-section-heading text-crimson">{{ selected_vendor.name }} | Menu</h2>
     </section>
 
     <hr class="my-3">
+
+    
+    <!-- View Cart Button -->
+    <section class="mb-4">
+        <div class="row">
+            <a href="{{ url_for('view_cart') }}" class="btn btn-success btn-lg d-block w-100" style="height: 70px; line-height: 50px;">
+                <i class="bi bi-cart3 me-2"></i> View Cart
+            </a>
+        </div>
+    </section>
 
     <!-- popup message to show when item is added to cart -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -79,7 +90,6 @@
                                 </div>
                                 <form action="{{ url_for('add_to_cart', item_id=item['menuItem_id'], vendor_id=selected_vendor.vendor_id) }}" method="GET" class="d-flex align-items-center">
                                     <!-- Using GET to match your Flask route -->
-                                    <input type="number" name="quantity" value="1" min="1" class="form-control me-2" style="width: 80px;">
                                     <button type="submit" class="btn btn-dark btn-sm">
                                         <i class="bi bi-plus-circle"></i> Add
                                     </button>
@@ -96,46 +106,7 @@
 
     <hr class="my-3">
 
-    <!-- Order Status -->
-    <section class="order-status mb-4">
-        <h2 class="vendor-section-heading text-crimson">
-            Order Status:
-            {% if active_order %}
-                <span class="badge {{ progress_class }}">{{ active_order.status }}</span>
-            {% else %}
-                <span class="badge bg-secondary">No Active Orders</span>
-            {% endif %}
-        </h2>
         
-        {% if active_order %}
-        <div class="card">
-            <div class="card-body">
-                <div class="progress-labels">
-                    <span class="text-start">Received</span>
-                    <span class="text-center">Cooking</span>
-                    <span class="text-center">Ready</span>
-                    <span class="text-end">Complete</span>
-                </div>
-                <div class="progress mb-3" role="progressbar" aria-label="Order progress"
-                     aria-valuenow="{{ progress_value }}" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar {{ progress_class }}" style="width: '{{ progress_value }}%';"></div>
-                </div>
-                <p class="card-text text-muted small">Your current order is being updated live.</p>
-            </div>
-        </div>
-        {% else %}
-            <p class="text-muted small">You have no active orders.</p>
-        {% endif %}
-    </section>
-
-    <!-- View Cart Button -->
-    <section class="mb-4">
-        <div class="row">
-            <a href="{{ url_for('view_cart') }}" class="btn btn-success btn-lg d-block w-100" style="height: 70px; line-height: 50px;">
-                <i class="bi bi-cart3 me-2"></i> View Cart
-            </a>
-        </div>
-    </section>
 </main>
 
     <footer class="mt-5 py-4">
