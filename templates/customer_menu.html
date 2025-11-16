@@ -89,7 +89,7 @@
                                     <span class="text-muted">R{{ "%.2f"|format(item['price']|float) }}</span>
                                 </div>
                                 <form action="{{ url_for('add_to_cart', item_id=item['menuItem_id'], vendor_id=selected_vendor.vendor_id) }}" method="GET" class="d-flex align-items-center">
-                                    <!-- Using GET to match your Flask route -->
+                                    <!-- Add button -->
                                     <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="bi bi-plus-circle"></i> Add
                                     </button>
@@ -127,42 +127,5 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selector = document.getElementById('status-selector');
-            const progressBar = document.getElementById('status-progress-bar');
-            const currentStatus = document.getElementById('current-status');
-
-            selector.addEventListener('change', function() {
-                const selectedOption = selector.options[selector.selectedIndex];
-                const progressValue = selectedOption.value;
-                const statusText = selectedOption.getAttribute('data-text');
-                const statusColor = selectedOption.getAttribute('data-color');
-                
-                // Update Progress Bar
-                progressBar.style.width = progressValue + '%';
-                progressBar.setAttribute('aria-valuenow', progressValue);
-                
-                // Update Progress Bar Color
-                progressBar.className = 'progress-bar'; // Reset classes
-                progressBar.classList.add('bg-' + statusColor);
-                
-                // Update Status Text Badge
-                currentStatus.textContent = statusText;
-                currentStatus.className = 'badge'; // Reset classes
-                currentStatus.classList.add('bg-' + statusColor);
-                
-                // Special case for 'Order Received' and 'Complete' for visibility
-                if (statusColor === 'warning' || statusColor === 'info') {
-                     currentStatus.classList.add('text-dark');
-                } else {
-                     currentStatus.classList.remove('text-dark');
-                }
-
-            });
-        });
-    </script>
-    <script src="scripts/app.js"></script>
 </body>
 </html>

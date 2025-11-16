@@ -273,7 +273,6 @@ def edit_vendor(vendor_id):
 
 #CUSTOMER SECTION!!!
 #***************************************************************
-
 # Standard operating hours
 STANDARD_OPEN = time(8, 0)   # 08:00
 STANDARD_CLOSE = time(16, 0) # 16:00
@@ -377,12 +376,6 @@ def customer_menu(vendor_id):
 
     #save last vendor id in session
     session['last_vendor_id'] = vendor_id
-
-     # Business hours check (08:00 - 16:00)
-    now = datetime.now().time()
-    opening = time(8, 0)
-    closing = time(16, 0)
-    vendor_closed = not (opening <= now <= closing)
 
     menu_items = [dict(item) for item in menu_items]
 
@@ -506,52 +499,35 @@ def generate_pickup_times():
     return times
 
 
-@app.route('/confirm_payment', methods=['GET', 'POST'])
-def confirm_payment():
+@app.route('/confirm_payment/cash', methods=['GET', 'POST'])
+def confirm_payment_cash():
     cart = session.get('cart', [])
     if not cart:
         flash("Your cart is empty.", "info")
         return redirect(url_for('customer_main'))
+    
+    # --- Add this here, after you get the cart ---
+    total = sum(item['price'] * item['quantity'] for item in cart)
 
-    # Generate pickup times if within operating hours
     pickup_times = generate_pickup_times()
-
-    # Default payment option
-    pay_option = request.form.get('pay_option', 'cash')
-
     if request.method == 'POST' and 'confirm_payment' in request.form:
-        pickup_time_str = request.form.get('pickup_time') if pickup_times else None
-        pay_option = request.form.get('pay_option', 'cash')
-        payment_method = 'online' if pay_option == 'online' else 'cash'
-        payment_status = 'paid' if pay_option == 'online' else 'unpaid'
+        selected_pickup = request.form.get('pickup_time')
 
-        conn = get_db_connection()
-        cur = conn.cursor()
+        # Check if within operating hours
+        if not pickup_times:
+            flash("Sorry, the vendor is closed. Orders can only be placed between 08:00 and 16:00.", "danger")
+            
 
-        # Vendor from first cart item
-        vendor_id = cart[0]['vendor_id']
+        if not selected_pickup:
+            flash("Please select a pickup time.", "danger")
+            return render_template(
+                'customer_confirm_payment.html',
+                cart=cart,
+                pay_option='cash',
+                pickup_times=pickup_times
+            )
 
-        cur.execute("""
-            INSERT INTO orders (user_id, collection_time, status, payment_method, payment_status, created_at, updated_at)
-            VALUES (?, ?, 'Submitted', ?, ?, ?, ?)
-        """, (
-            session.get('user_id'),
-            pickup_time_str,
-            payment_method,
-            payment_status,
-            datetime.now(),
-            datetime.now()
-        ))
-        order_id = cur.lastrowid
-
-        for item in cart:
-            cur.execute("""
-                INSERT INTO orderItem (orders_order_id, menuItem_menuItem_id, vendor_id, price_per_item)
-                VALUES (?, ?, ?, ?)
-            """, (order_id, item['id'], vendor_id, item['price']))
-
-        conn.commit()
-        conn.close()
+        process_order(cart, payment_method='cash', payment_status='unpaid', pickup_time=selected_pickup)
         session.pop('cart', None)
         flash("Order confirmed!", "success")
         return redirect(url_for('customer_main'))
@@ -559,9 +535,114 @@ def confirm_payment():
     return render_template(
         'customer_confirm_payment.html',
         cart=cart,
-        pickup_times=pickup_times,
-        pay_option=pay_option
+        pay_option='cash',
+        pickup_times=pickup_times
     )
+
+@app.route('/confirm_payment/online', methods=['GET', 'POST'])
+def confirm_payment_online():
+    cart = session.get('cart', [])
+    if not cart:
+        flash("Your cart is empty.", "info")
+        return redirect(url_for('customer_main'))
+    
+    # --- Add this here, after you get the cart ---
+    total = sum(item['price'] * item['quantity'] for item in cart)
+
+    pickup_times = generate_pickup_times()
+    selected_pickup = None
+    errors = {}  # Store field-specific errors
+
+    if request.method == 'POST' and 'confirm_payment' in request.form:
+        if not pickup_times:
+            flash("Sorry, the vendor is closed. Orders can only be placed between 08:00 and 16:00.", "danger")
+            
+
+        selected_pickup = request.form.get('pickup_time')
+        card_first = request.form.get('card_first', '').strip()
+        card_last = request.form.get('card_last', '').strip()
+        card_number = request.form.get('card_number', '').replace(" ", "")
+        card_cvv = request.form.get('card_cvv', '').strip()
+        card_expiry = request.form.get('card_expiry', '').strip()
+
+        # Validate pickup time
+        if not selected_pickup:
+            errors['pickup_time'] = "Please select a pickup time."
+
+        # Validate card fields
+        if not card_first:
+            errors['card_first'] = "First name is required."
+        if not card_last:
+            errors['card_last'] = "Last name is required."
+        if not card_number or not card_number.isdigit() or not (13 <= len(card_number) <= 19):
+            errors['card_number'] = "Card number must be 13–19 digits."
+        if not card_cvv or not card_cvv.isdigit() or len(card_cvv) not in [3, 4]:
+            errors['card_cvv'] = "CVV must be 3 or 4 digits."
+        try:
+            exp_year, exp_month = map(int, card_expiry.split("-"))
+            today = datetime.today()
+            exp_date = datetime(exp_year, exp_month, 1)
+            exp_date = exp_date.replace(day=28) + timedelta(days=4)
+            exp_date = exp_date - timedelta(days=exp_date.day)
+            if exp_date < today:
+                errors['card_expiry'] = "Card expiry has passed."
+        except Exception:
+            errors['card_expiry'] = "Invalid expiry date."
+
+        if errors:
+            return render_template(
+                'customer_confirm_payment.html',
+                cart=cart,
+                pay_option='online',
+                pickup_times=pickup_times,
+                errors=errors,
+                form_data=request.form
+            )
+
+        # Process order
+        process_order(cart, payment_method='online', payment_status='paid', pickup_time=selected_pickup)
+        session.pop('cart', None)
+        flash("Order confirmed!", "success")
+        return redirect(url_for('customer_main'))
+
+    return render_template(
+        'customer_confirm_payment.html',
+        cart=cart,
+        pay_option='online',
+        pickup_times=pickup_times,
+        errors={},
+        form_data={}
+    )
+
+# -------------------------
+# Helper function to insert order
+# -------------------------
+def process_order(cart, payment_method, payment_status, pickup_time):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    vendor_id = cart[0]['vendor_id']  # Assuming all items from same vendor
+
+    cur.execute("""
+        INSERT INTO orders (user_id, collection_time, status, payment_method, payment_status, created_at, updated_at)
+        VALUES (?, ?, 'Submitted', ?, ?, ?, ?)
+    """, (
+        session.get('user_id'),
+        pickup_time,
+        payment_method,
+        payment_status,
+        datetime.now(),
+        datetime.now()
+    ))
+    order_id = cur.lastrowid
+
+    for item in cart:
+        cur.execute("""
+            INSERT INTO orderItem (orders_order_id, menuItem_menuItem_id, vendor_id, price_per_item)
+            VALUES (?, ?, ?, ?)
+        """, (order_id, item['id'], vendor_id, item['price']))
+
+    conn.commit()
+    conn.close()
 #End of Confirm payment page
 #================================================================
 #End of CUSTOMER SECTION!!!

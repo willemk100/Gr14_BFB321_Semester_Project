@@ -91,7 +91,7 @@
                 <!--Add to cart -->
                 <a href="{{ url_for('customer_menu', vendor_id=session.get('last_vendor_id')) }}" class="btn btn-primary">Add More Items</a>
                 <!-- checkout button -->
-                <a href="{{ url_for('confirm_payment') }}" class="btn btn-success">Checkout</a>
+                <a href="{{ url_for('confirm_payment_online') }}" class="btn btn-success">Checkout</a>
             </div>
         </div>
         <!-- if cart is empty -->
