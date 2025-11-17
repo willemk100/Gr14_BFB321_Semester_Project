@@ -273,7 +273,9 @@ def edit_vendor(vendor_id):
 
 #CUSTOMER SECTION!!!
 #***************************************************************
-# Standard operating hours
+# Standard operating hours for all vendors 
+# Just specified here for easy editing later (could be  added to DB if vendors will have different hours)
+# For the purpose of this project, all vendors have same hours: 08:00–16:00
 STANDARD_OPEN = time(8, 0)   # 08:00
 STANDARD_CLOSE = time(16, 0) # 16:00
 
@@ -293,14 +295,16 @@ def customer_main():
     user_id = session.get('user_id')
     conn = get_db_connection()
 
-    # Get all vendors
+    # ------------------------
+    # Vendors with status
+    # ------------------------
     vendors = conn.execute("SELECT * FROM vendor").fetchall()
-
     now = datetime.now().time()
     vendors_with_status = []
+
     for vendor in vendors:
         vendor_dict = dict(vendor)
-        if is_open_now():
+        if is_open_now():  # your function
             vendor_dict['status_text'] = f"Open — Closes at {STANDARD_CLOSE.strftime('%H:%M')}"
             vendor_dict['status_class'] = 'bg-success'
         else:
@@ -311,50 +315,85 @@ def customer_main():
             vendor_dict['status_class'] = 'bg-danger'
         vendors_with_status.append(vendor_dict)
 
-    # Get active order
-    active_order = conn.execute("""
-        SELECT * FROM orders 
-        WHERE user_id = ? AND status != 'Collected' 
-        ORDER BY order_date DESC, order_id DESC
-        LIMIT 1
-    """, (user_id,)).fetchone()
+    # ------------------------
+    # Active orders (not Collected)
+    # ------------------------
+    active_orders_raw = conn.execute("""
+        SELECT o.*, v.name AS vendor_name
+        FROM orders o
+        JOIN orderItem oi ON oi.orders_order_id = o.order_id
+        JOIN vendor v ON oi.vendor_id = v.vendor_id
+        WHERE o.user_id = ? AND o.status != 'Collected'
+        GROUP BY o.order_id
+        ORDER BY o.collection_time ASC
+    """, (user_id,)).fetchall()
 
-    order_items = []
-    if active_order:
-        order_items = conn.execute("""
-            SELECT oi.*, m.name, m.category 
-            FROM orderItem oi 
-            JOIN menuItem m ON oi.menuItem_menuItem_id = m.menuItem_id 
+    active_orders = []
+    for order in active_orders_raw:
+        order_dict = dict(order)
+
+        # Fetch items for this order
+        items = conn.execute("""
+            SELECT oi.*, m.name AS item_name, m.category
+            FROM orderItem oi
+            JOIN menuItem m ON oi.menuItem_menuItem_id = m.menuItem_id
             WHERE oi.orders_order_id = ?
-        """, (active_order['order_id'],)).fetchall()
+        """, (order['order_id'],)).fetchall()
 
+        # Convert rows to dicts
+        order_dict['items'] = [dict(item) for item in items]
+
+        # Calculate total
+        order_dict['total'] = sum(item['price_per_item'] for item in order_dict['items'])
+
+        # Progress mapping
         status_map = {
             'Submitted': (25, 'bg-warning'),
             'Preparing': (50, 'bg-primary'),
             'Ready': (75, 'bg-info'),
-            'Collected': (100, 'bg-success')
+            'Collected': (100, 'bg-success'),
+            'Uncollected': (0, 'bg-danger')
         }
-        progress_value, progress_class = status_map.get(active_order['status'], (0, 'bg-secondary'))
-    else:
-        progress_value, progress_class = 0, 'bg-secondary'
+        progress_value, progress_class = status_map.get(order['status'], (0, 'bg-secondary'))
+        order_dict['progress_value'] = int(progress_value)
+        order_dict['progress_class'] = progress_class
 
-    last_collected_order = conn.execute("""
-        SELECT * FROM orders 
-        WHERE user_id = ? AND status = 'Collected'
-        ORDER BY order_date DESC, order_id DESC
-        LIMIT 1
-    """, (user_id,)).fetchone()
+        active_orders.append(order_dict)
+
+    # ------------------------
+    # Last 3 collected orders
+    # ------------------------
+    last_collected_orders_raw = conn.execute("""
+        SELECT o.*, v.name AS vendor_name
+        FROM orders o
+        JOIN orderItem oi ON oi.orders_order_id = o.order_id
+        JOIN vendor v ON oi.vendor_id = v.vendor_id
+        WHERE o.user_id = ? AND o.status = 'Collected'
+        GROUP BY o.order_id
+        ORDER BY o.collection_time DESC
+        LIMIT 3
+    """, (user_id,)).fetchall()
+
+    last_collected_orders = []
+    for order in last_collected_orders_raw:
+        order_dict = dict(order)
+        items = conn.execute("""
+            SELECT oi.*, m.name AS item_name, m.category
+            FROM orderItem oi
+            JOIN menuItem m ON oi.menuItem_menuItem_id = m.menuItem_id
+            WHERE oi.orders_order_id = ?
+        """, (order['order_id'],)).fetchall()
+        order_dict['items'] = [dict(item) for item in items]
+        order_dict['total'] = sum(item['price_per_item'] for item in order_dict['items'])
+        last_collected_orders.append(order_dict)
 
     conn.close()
 
     return render_template(
         'customer_main.html',
         vendors=vendors_with_status,
-        active_order=active_order,
-        order_items=order_items,
-        progress_value=progress_value,
-        progress_class=progress_class,
-        last_collected_order=last_collected_order
+        active_orders=active_orders,
+        last_collected_orders=last_collected_orders
     )
     
 #End of Customer home page

@@ -71,7 +71,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=number] {
-    -moz-appearance: textfield; 
+    -moz-appearance: textfield; /* Firefox */
+    -webkit-appearance: none;   /* Safari/Chrome */
+    appearance: none;           /* Standard property */
 }
 
 .time-filter .btn {
@@ -142,3 +144,13 @@ input[type=number] {
             justify-content: space-between;
             align-items: center;
         }
+
+/* progress bar */
+.progress-bar-submitted { width: 25%; }
+.progress-bar-preparing { width: 50%; }
+.progress-bar-ready { width: 75%; }
+.progress-bar-collected { width: 100%; }
+
+.progress-bar {
+    transition: width 0.5s ease;
+}

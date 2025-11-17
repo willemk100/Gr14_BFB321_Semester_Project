@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer - Food Ordering Platform</title>
+    <title>Customer Home Page - Food Ordering Platform</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -33,17 +33,72 @@
         </nav>
     </header>
 
-    <main class="container mt-4" role="main">
-        <header class="mb-4">
-            <h1 class="h2">
-                <i class="bi me-2" aria-hidden="true"></i>
-                Browse Vendor Menus
-            </h1>
-        </header>
+  
+<main class="container mt-4">
+    <header class="mb-4">
+        <h1 class="h1">
+            <i class="bi bi-cart-fill me-2"></i>Home Page
+        </h1>
+    </header>
 
-        <!-- Start of the list of vendors -->
-        <section class="mb-4" aria-labelledby="options-heading">
-            <h2 id="options-heading" class="mb-3">Our Vendors</h2>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Active Orders -->
+    <section class="order-status mb-4">
+        <h2 class="h3">
+            <i class="bi bi-clock-history me-2"></i> Active Orders
+        </h2>
+
+        {% if active_orders %}
+            {% for order in active_orders %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Order #{{ order['order_id'] }} — {{ order['vendor_name'] }}
+                            <span class="badge {{ order['progress_class'] }}">{{ order['status'] }}</span>
+                        </h5>
+                        <p><strong>Pickup Time:</strong> {{ order['collection_time'] }}</p>
+                        <p><strong>Items:</strong></p>
+                        <ul>
+                            {% for item in order['items'] %}
+                                <li>{{ item['item_name'] }} ({{ item['category'] }}) - R{{ item['price_per_item'] }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p><strong>Total:</strong> R{{ order['total'] }}</p>
+                        <p><strong>Payment Status:</strong>
+                            {% if order['payment_status'] == 'paid' %}
+                                <span class="badge bg-success">Paid</span>
+                            {% else %}
+                                <span class="badge bg-warning">Unpaid</span>
+                            {% endif %}
+                        </p>
+
+                        <div class="progress mb-2">
+                            <div class="progress-bar {{ order.progress_class }}" role="progressbar" aria-valuenow="{{ order.progress_value }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No active orders at the moment.</p>
+        {% endif %}
+    </section>
+
+    <!-- Vendors -->
+     <section class="mb-4" aria-labelledby="options-heading">
+            <h2 id="options-heading" class="h3">  
+                <i class="bi bi-shop me-2"></i> Available Vendors
+            </h2>
             
             {% for vendor in vendors %}
             <div class="row mb-4">
@@ -78,64 +133,26 @@
             {% endfor %}
         </section>
 
-        <!-- Active Order Status -->
-        <section class="order-status mb-4">
-            <h2 class="vendor-section-heading text-crimson">
-                Order Status:
-                {% if active_order %}
-                    <span class="badge {{ progress_class }}">{{ active_order.status }}</span>
-                {% else %}
-                    <span class="badge bg-secondary">No Active Orders</span>
-                {% endif %}
-            </h2>
-
-            {% if active_order %}
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Order #{{ active_order.order_id }}</h5>
-                    <p class="card-text"><strong>Pickup Time:</strong> {{ active_order.collection_time }}</p>
-                    <p class="card-text"><strong>Items:</strong></p>
-                    <ul>
-                        {% for item in order_items %}
-                        <li>{{ item.name }} ({{ item.category }}) - R{{ item.price_per_item }}</li>
-                        {% endfor %}
-                    </ul>
-
-                    <div class="progress-labels">
-                        <span class="text-start">Received</span>
-                        <span class="text-center">Cooking</span>
-                        <span class="text-center">Ready</span>
-                        <span class="text-end">Complete</span>
+    <!-- Last 3 Collected Orders -->
+    <section class="mb-4">
+        <h2 class="h3">
+            <i class="bi bi-check2-circle me-2"></i> Previous 3 Orders
+        </h2>
+        {% if last_collected_orders %}
+            {% for order in last_collected_orders %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5>Order #{{ order['order_id'] }} — Vendor: {{ order['vendor_name'] }}</h5>
+                        <p>Date: {{ order['order_date'] }} | Collection Time: {{ order['collection_time'] }}</p>
                     </div>
-
-                    <div class="progress mb-3" role="progressbar" aria-label="Order progress"
-                        aria-valuenow="{{ progress_value }}" aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar {{ progress_class }}" style="width: '{{ progress_value|default(0) }}%';"></div>
-                    </div>
-
-                    <p class="card-text text-muted small">Your current order is being updated live.</p>
                 </div>
-            </div>
-            {% else %}
-            <p class="card-text text-muted small">You have no active orders.</p>
-            {% endif %}
-        </section>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No collected orders yet.</p>
+        {% endif %}
+    </section>
+</main>
 
-        <!-- Previous Order -->
-        <section class="mb-4" aria-labelledby="order-status-heading">
-            <h2 id="actions-heading" class="h3 mb-3 bi-clock-history"> Order History</h2>
-            <div class="row custom-row">
-                <div class="col-md-12 mb-3">
-                    <div class="card h-40" style="width: 100%; display: flex; flex-direction: row;">
-                        <div class="card-body">
-                            <h5 class="card-title">Order #001</h5>
-                            <p class="card-text">Date: (DD/MM/YYYY)</p>
-                        </div>
-                    </div>   
-                </div>  
-            </div>
-        </section>
-    </main>
 
     <footer class="mt-5 py-4">
         <div class="container">
