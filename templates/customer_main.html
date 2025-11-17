@@ -146,10 +146,10 @@
                         <h5>{{ order['vendor_name'] }}</h5>
                         <ul>
                             {% for item in order['items'] %}
-                                <li>{{ item['item_name'] }} ({{ item['category'] }}) - R{{ item['price_per_item'] }}</li>
+                                <li>{{ item['item_name'] }} {{ item['category'] }} - R{{ "%.2f"|format(item['price_per_item']) }}</li>
                             {% endfor %}
                         </ul>
-                        <p><strong>Total:</strong> R{{ order['total'] }}</p>
+                        <p><strong>Total:</strong> R{{ "%.2f"|format(order['total']) }}</p>
                     </div>
                 </div>
             {% endfor %}
