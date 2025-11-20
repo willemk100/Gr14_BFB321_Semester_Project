@@ -8,6 +8,25 @@ Willem Kleynhans – u04868260
 
 ---
 
+## Who did what?
+
+# Willem Kleynhans
+- Created the schema of the database and added some starting date. Other members have also added additional data. 
+- Created the starting structure of the app.py file, this included figuring out how the Flask process works.
+- Started the rendering of the customer_main.html, customer_menu.html page.
+- Completed the entire login flow, new cuctomer page, all the admin_xxx.html pages that includes adding new vendors. 
+
+# Ayden de Villiers
+
+
+# Ricus Bouwer
+
+
+# Wian du Toit
+
+
+---
+
 ## How to run the app
 
 1. Please run the following command in the bash terminal.
