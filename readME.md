@@ -20,7 +20,13 @@ Willem Kleynhans – u04868260 - willemk100
 
 
 # Ricus Bouwer
-
+- Created vendor_main.html and imported the data from ordering.sql to be displayed in a table showing its statuses.
+- Created vendor_analytics_ABC page. Created an ABC classification chart whos plot points are 
+displayed in a table below according to order, profit and cost.
+- Created vendor_analytics_trends.html and displayed data from ordering.sql in line graphs that can
+be copared to different products on the menu according to cost, products sold and profit.
+- Lastly worked on all of these pages'python section in app.py to make sure that the backend is connected 
+with the frontend.
 
 # Wian du Toit
 

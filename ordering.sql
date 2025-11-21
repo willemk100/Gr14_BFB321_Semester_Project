@@ -321,7 +321,7 @@ INSERT INTO "orders" ("order_id", "user_id", "order_date", "collection_time", "s
 (1104,2,'2025-11-06','11:45','Collected','online','paid'),
 (1105,3,'2025-11-06','13:30','Collected','online','paid'),
 -- November 7 (today) → mix
-(1106,2,'2025-11-07','10:15','Submitted','online','paid'),
+(1106,2,'2025-11-07','10:15','Ordered','online','paid'),
 (1107,3,'2025-11-07','11:00','Preparing','online','paid'),
 (1108,2,'2025-11-07','12:30','Ready','online','paid');
 

@@ -43,7 +43,6 @@ def get_db_connection():
 #***********************************************************
 
 
-
 #LOGIN AND NEW USER PAGES!!!
 #***********************************************************
 #Login Page - Where everything starts (login.html)
@@ -146,12 +145,10 @@ def add_customer():
     return render_template('new_customer.html')
 
 
-
 #End of New Customer Registration Page
 #===========================================================
 #End of LOGIN AND NEW USER PAGES!!!
 #***********************************************************
-
 
 
 #Now we move to different user sections!!!!
@@ -268,8 +265,6 @@ def edit_vendor(vendor_id):
 #===============================================================
 #End of ADMIN SECTION!!!
 #***************************************************************
-
-
 
 #CUSTOMER SECTION!!!
 #***************************************************************
@@ -710,7 +705,6 @@ def process_order(cart, payment_method, payment_status, pickup_time):
 #================================================================
 #End of CUSTOMER SECTION!!!
 #***************************************************************
-
 
 #VENDOR SECTION!!!
 #***************************************************************
@@ -1226,9 +1220,6 @@ def vendor_analytics_ABC():
                            start_date=start_date,
                            end_date=end_date)
 
-
-
-
 #End of vendor analytics ABC page
 #===============================================================
 
@@ -1361,7 +1352,6 @@ def vendor_analytics_forecasting():
 #End of VENDOR SECTION!!!
 #***************************************************************
     
-
 
 #FINAL SETUP!!!
 #***********************************************************
