@@ -13,6 +13,56 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" 
           rel="stylesheet">
+
+   <style>
+    
+        .alert-success {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background-color: #F0FFF4;
+            border-left: 10px solid #34A853;
+            padding: 18px 26px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            font-family: system-ui;
+            margin-top: 20px;
+        }
+
+        .alert-icon {
+            width: 44px;
+            height: 44px;
+            background-color: #D7F4E5;
+            color: #2E7D32;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .alert-success p {
+            margin: 0;
+            color: #285B2A;
+            font-size: 17px;
+            line-height: 1.45;
+        }
+
+        html, body {
+        height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;   
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -41,6 +91,7 @@
                             </a>
                         </li>
                     </ul>
+
                     <!-- Edit Menu -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
@@ -63,8 +114,7 @@
                 </div>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <!-- Options in Nav Bar -->
-                    
+
                     <!-- Logout -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
@@ -169,7 +219,7 @@
             </table>
         </div>  -->
 
-        {% if selected_order %}
+        {% if selected_order and selected_order.status != 'Collected' %}
         <!-- INLINE POP-UP for selected order -->
         <section class="mt-4">
             <div class="card shadow-lg card-detail p-4">
@@ -212,6 +262,37 @@
                         </span>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Message for Collected Orders -->
+        <!-- <section class="mt-8">
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg shadow-md" role="alert">
+
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-check-circle-fill text-green-600 text-xl"></i>
+                    </div>
+                    
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-green-800">
+                            Order {{ selected_order.tracking_id }} has been successfully collected. No further actions required.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>  -->
+
+        {% elif selected_order and selected_order.status == 'Collected' %}  
+       <section class="mt-8">
+            <div class="alert-success">
+                <div class="alert-icon">
+                    <i class="bi bi-check-lg"></i>
+                </div>
+                <p>
+                    Order {{ selected_order.tracking_id }} has been successfully collected. No further actions required.
+                </p>
             </div>
         </section>
         {% endif %}
