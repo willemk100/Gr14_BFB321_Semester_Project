@@ -13,16 +13,19 @@
 <body>
     <header>
         <nav class="navbar" style="background-color: crimson;" role="navigation" aria-label="Main navigation">
+
             <div class="container">
+
                 <a class="navbar-brand" style="color: ghostwhite;">
                     <img src="{{ url_for('static', filename='up-logo.png') }}" alt="UPLogo" width="90" height="30" aria-hidden="true" class="d-inline-block align-text-top">  
                     Food Ordering Platform
                 </a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="container nav">
 
+                <div class="container nav">
 
                     <!-- Orders -->
                     <ul class="navbar-nav me-auto">
@@ -52,6 +55,7 @@
                             </a>
                         </li>
                     </ul>
+                    
                 </div>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -67,7 +71,9 @@
                         </li>
                     </ul>
                 </div>
+
             </div>
+
         </nav>
     </header>
 
