@@ -1352,9 +1352,9 @@ def vendor_analytics_trends():
                            product2=product2,
                            metric=metric,
                            timeframe=timeframe,
-                           month=month)
-
-
+                           month=month,
+                           table_data=table_data)
+                           
 #End of vendor analytics trends page
 #===============================================================
 
