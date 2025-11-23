@@ -1288,9 +1288,32 @@ def vendor_analytics_trends():
             data[date_key]['Total Profit'] += row['price_per_item'] - row['cost']
             data[date_key]['Total Cost'] += row['cost']
         return data
-
+    
+    #Helper function to calculate totals for table summary
+    def calculate_totals(aggregated_data):
+        totals = {'Units Sold': 0, 'Total Profit': 0.0, 'Total Cost': 0.0}
+        for period_key in aggregated_data:
+            totals['Units Sold'] += aggregated_data[period_key]['Units Sold']
+            totals['Total Profit'] += aggregated_data[period_key]['Total Profit']
+            totals['Total Cost'] += aggregated_data[period_key]['Total Cost']
+        # Format currency fields to Rands (R) with 2 decimal places
+        totals['Total Profit'] = f"R{totals['Total Profit']:.2f}"
+        totals['Total Cost'] = f"R{totals['Total Cost']:.2f}"
+        return totals
+    
+    # Fetch data for both products
     data1 = get_product_data(product1, timeframe, month)
     data2 = get_product_data(product2, timeframe, month)
+
+    # Calculate summary data for the table
+    summary1 = calculate_totals(data1)
+    summary2 = calculate_totals(data2)
+
+    # Structure data for easy iteration in the HTML template
+    table_data = [
+        {'item': product1, 'summary': summary1},
+        {'item': product2, 'summary': summary2}
+    ]
 
     # Prepare line graph with sorted dates
     all_dates = sorted(set(list(data1.keys()) + list(data2.keys())))
