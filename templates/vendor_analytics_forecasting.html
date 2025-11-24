@@ -80,23 +80,20 @@
                     </div>
 
                     <div class="d-flex justify-content-center mb-4 time-filter">
-                        <input type="radio" class="btn-check" name="time-filter" id="weekly" autocomplete="off">
-                        <label class="btn btn-outline-secondary" for="weekly" >
-                            Weekly
-                        </label>
-                        <input type="radio" class="btn-check" name="time-filter" id="monthly" autocomplete="off">
-                        <label class="btn btn-outline-secondary" for="monthly" >
-                            Monthly
-                        </label>
+                        <div class="btn-group" role="group" aria-label="Time period selection">
+                            <!-- Weekly -->
+                            <a href="{{ url_for('vendor_analytics_forecasting', filter_type='weekly', product1=selected_item_string) }}" class="btn btn-outline-primary {% if filter_type == 'weekly' %}active{% endif %}">Weekly</a>
+                            <!-- Monthly -->
+                            <a href="{{ url_for('vendor_analytics_forecasting', filter_type='monthly', product1=selected_item_string) }}" class="btn btn-outline-primary {% if filter_type == 'monthly' %}active{% endif %}">Monthly</a>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-start mb-4 item-selector">
     
-                        <form method="GET" action="{{ url_for('vendor_analytics_forecasting') }}" class="d-flex align-items-center">
-                            
+                        <form method="GET" action="{{ url_for('vendor_analytics_forecasting') }}" class="w-100">
+                            <input type="hidden" name="filter_type" value="{{ filter_type }}">
                             <div>
                                 <label for="product1" class="me-2">Select Item:</label>
-                                
                                 <select name="product1" id="product1" class="form-select me-4" onchange="this.form.submit()">
                                     
                                     {% for item in menu_items %}
@@ -111,7 +108,6 @@
                                     
                                 </select>
                             </div>
-                            
                         </form>
                         
                     </div>
