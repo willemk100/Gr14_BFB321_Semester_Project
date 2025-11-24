@@ -1367,7 +1367,7 @@ def get_menu_items(conn, vendor_id):
         (vendor_id,)
     ).fetchall()
     
-    return [{'menuItem_id': row[0], 'category': row[1], 'name': row[2]} for row in items]
+    return [f"{row[0]}|{row[1]} ({row[2]})" for row in items]
 
 @app.route('/vendor_analytics_forecasting', methods=['GET'])
 def vendor_analytics_forecasting():
