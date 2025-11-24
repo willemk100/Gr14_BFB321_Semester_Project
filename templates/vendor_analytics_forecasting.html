@@ -90,27 +90,28 @@
 
                     <div class="d-flex justify-content-start mb-4 item-selector">
     
-                        <!-- Item Selector Form (Submits the new product1 and preserves filter_type) -->
                         <form method="GET" action="{{ url_for('vendor_analytics_forecasting') }}" class="w-100">
-                            <!-- Hidden input to preserve the current filter type -->
                             <input type="hidden" name="filter_type" value="{{ filter_type }}">
                             
                             <div>
                                 <label for="product1" class="me-2">Select Item:</label>
-                                <!-- The onchange event is fine because it only submits the form it belongs to. -->
-                                <select name="product1" id="product1" class="form-select me-4" onchange="this.form.submit()">
+                                <div class="col-12 col-md-3"> 
+
+                                    <select name="product1" id="product1" class="form-select me-4" onchange="this.form.submit()">
+                                        
+                                        {% for item in menu_items %}
+                                            <option value="{{ item }}" 
+                                                {% if item == selected_item_string %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ item.split('|')[1] }}
+                                            </option>
+                                        {% endfor %}
+                                        
+                                    </select>
                                     
-                                    {% for item in menu_items %}
-                                        <option value="{{ item }}" 
-                                            {% if item == selected_item_string %}
-                                                selected
-                                            {% endif %}
-                                        >
-                                            {{ item.split('|')[1] }}
-                                        </option>
-                                    {% endfor %}
-                                    
-                                </select>
+                                </div>
                             </div>
                         </form>
                         
