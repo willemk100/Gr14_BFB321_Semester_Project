@@ -243,25 +243,6 @@
             </div>
         </section>
 
-        <!-- Message for Collected Orders -->
-        <!-- <section class="mt-8">
-            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg shadow-md" role="alert">
-
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="bi bi-check-circle-fill text-green-600 text-xl"></i>
-                    </div>
-                    
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-green-800">
-                            Order {{ selected_order.tracking_id }} has been successfully collected. No further actions required.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </section>  -->
-
         {% elif selected_order and selected_order.status == 'Collected' %}  
        <section class="mt-8">
             <div class="alert-success">
