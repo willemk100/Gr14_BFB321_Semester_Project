@@ -1470,15 +1470,17 @@ def vendor_analytics_forecasting():
 
     # 3c. Predicted Daily Demand During Peak Time (Total orders at busiest time / 21 days)
     total_days = 21 # 3 weeks * 7 days
-    
-    daily_peak_orders_sql = """
-        SELECT COUNT(order_id)
-        FROM orders
-        WHERE order_date BETWEEN '2025-10-13' AND '2025-11-02'
-          AND collection_time = ?;
-    """
-    total_orders_at_peak = conn.execute(daily_peak_orders_sql, (busiest_time,)).fetchone()[0]
-    predicted_daily_demand = round(total_orders_at_peak / total_days, 2)
+    predicted_daily_demand = 0.0 # Initialize to 0.0
+
+    if busiest_time != 'N/A':
+        daily_peak_orders_sql = """
+            SELECT COUNT(order_id)
+            FROM orders
+            WHERE order_date BETWEEN '2025-10-13' AND '2025-11-02'
+              AND collection_time = ?;
+        """
+        total_orders_at_peak = conn.execute(daily_peak_orders_sql, (busiest_time,)).fetchone()[0]
+        predicted_daily_demand = round(total_orders_at_peak / total_days, 2)
 
     conn.close() 
 
