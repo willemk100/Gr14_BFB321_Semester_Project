@@ -760,7 +760,6 @@ def vendor_home():
     if request.method == 'POST':
         selected_id = request.form.get('selected_order_id')
         if selected_id:
-            # strip # if it’s included
             selected_id_clean = selected_id.replace('#', '')
             for order in orders_for_template:
                 if order['tracking_id'] == f"#{selected_id_clean}":
@@ -1296,7 +1295,6 @@ def vendor_analytics_trends():
             totals['Units Sold'] += aggregated_data[period_key]['Units Sold']
             totals['Total Profit'] += aggregated_data[period_key]['Total Profit']
             totals['Total Cost'] += aggregated_data[period_key]['Total Cost']
-        # Format currency fields to Rands (R) with 2 decimal places
         totals['Total Profit'] = f"R{totals['Total Profit']:.2f}"
         totals['Total Cost'] = f"R{totals['Total Cost']:.2f}"
         return totals
@@ -1334,7 +1332,6 @@ def vendor_analytics_trends():
     plt.tight_layout()
     plt.legend()
 
-    # Format X-axis as 'DD MMM' for readability
     plt.gca().xaxis.set_major_formatter(plt.matplotlib.dates.DateFormatter('%d %b'))
 
     img = io.BytesIO()
