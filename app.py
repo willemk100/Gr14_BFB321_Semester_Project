@@ -1391,8 +1391,6 @@ def vendor_analytics_forecasting():
     target_category = selected_category
 
     # --- 1. Define Historical Periods ---
-    target_category = 'Burger'
-    
     # Define the date ranges for the 3 preceding full weeks (Sun to Sat)
     weekly_periods = [
         {'id': 1, 'start': '2025-10-27', 'end': '2025-11-02'},
