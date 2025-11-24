@@ -1409,18 +1409,16 @@ def vendor_analytics_forecasting():
         target_item_name = parts[1]     
     
     
-    # --- 2. ANALYSIS BLOCK (Runs ONLY if a valid item ID exists) ---
+    # --- 2. ANALYSIS BLOCK ---
     if target_item_id:
         
         # Define a consistent reference date for backward calculation (ensures consistency for testing)
         reference_date = datetime(2025, 11, 3).date()
         
-        # --- Define Historical Periods (DYNAMIC based on filter_type) ---
+        # --- Define Historical Periods ---
         if filter_type == 'monthly':
-            # Monthly View: Look at the 3 preceding 30-day blocks
             periods = []
             
-            # Start 1 day before the reference date
             end_date = reference_date - timedelta(days=1)
             
             for i in range(1, 4):
@@ -1437,8 +1435,7 @@ def vendor_analytics_forecasting():
             historical_periods = periods
             period_label = "Past Months" 
             
-        else: # Default or 'weekly'
-            # Weekly View: Look at the 3 preceding full weeks (Hardcoded dates)
+        else: 
             historical_periods = [
                 {'id': '1', 'start': '2025-10-27', 'end': '2025-11-02', 'total_days': 7},
                 {'id': '2', 'start': '2025-10-20', 'end': '2025-10-26', 'total_days': 7},
@@ -1524,11 +1521,8 @@ def vendor_analytics_forecasting():
             total_orders_at_peak = conn.execute(daily_peak_orders_sql, (total_start_date, total_end_date, busiest_time)).fetchone()[0]
             predicted_daily_demand = round(total_orders_at_peak / total_historic_days, 2)
     
-    # --- End Analysis Block ---
-    
     conn.close() 
 
-    # --- Pass Data to Template ---
     return render_template('vendor_analytics_forecasting.html', 
         historical_data=historical_data,
         target_item_name=target_item_name,  
@@ -1557,4 +1551,3 @@ if __name__ == '__main__':
 #===========================================================
 #End of FINAL SETUP!!!
 #***********************************************************
-
