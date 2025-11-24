@@ -30,7 +30,10 @@ with the frontend.
 
 # Wian du Toit
 - Edited vendor_main.html to display certain order information according to the Order Status of a selected Order ID.
-- Edited vendor_analytics_trends.html to display information in the table, comparing two selected menu items, accoring to user-selected criteria.
+- Edited vendor_analytics_trends.html to display information in the table, comparing two selected menu items, accoring to user-selected criteria. Also added code for the table headings for visual improvements.
+- Created vendor_analytics_forecasting.html and imported the data from ordering.sql to be displayed in a table showing predicted forecasts/demands for each individual menu item.
+- Edited table elements in vendor_analytics_ABC.html for visual improvements. Also corrected the footer layout for this page.
+- Worked on all of these pages' python section in app.py to connect the backend with the frontend.
 
 
 ---
